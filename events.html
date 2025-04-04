@@ -70,6 +70,30 @@
         tr:hover {
             background-color: #f5f5f5;
         }
+        .loading {
+            text-align: center;
+            margin: 2em 0;
+            color: #666;
+        }
+        .update-button {
+            display: block;
+            margin: 2em auto;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s;
+        }
+        .update-button:hover {
+            background-color: #2980b9;
+        }
+        .update-button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -90,6 +114,8 @@
             <a href="/about">О нас</a>
             <a href="/ustin">Устин</a>
         </div>
+        <button id="updateButton" class="update-button">Обновить события</button>
+        <div id="loading" class="loading">Загрузка событий...</div>
         <table>
             <thead>
                 <tr>
@@ -100,10 +126,81 @@
                     <th>Ссылка на покупку билета</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Здесь будут строки с событиями -->
+            <tbody id="eventsTableBody">
             </tbody>
         </table>
     </div>
+
+    <script>
+        async function loadEvents() {
+            try {
+                const response = await fetch('/api/events');
+                const events = await response.json();
+                
+                const tbody = document.getElementById('eventsTableBody');
+                document.getElementById('loading').style.display = 'none';
+                
+                // Очищаем таблицу
+                tbody.innerHTML = '';
+                
+                events.forEach(event => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${event.name}</td>
+                        <td>${event.date}</td>
+                        <td>${event.category}</td>
+                        <td>${event.description}</td>
+                        <td>${event.ticket_link ? `<a href="${event.ticket_link}" target="_blank">Купить билет</a>` : '-'}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading events:', error);
+                document.getElementById('loading').textContent = 'Ошибка загрузки событий';
+            }
+        }
+
+        async function updateEvents() {
+            const button = document.getElementById('updateButton');
+            const loading = document.getElementById('loading');
+            
+            try {
+                // Отключаем кнопку и показываем загрузку
+                button.disabled = true;
+                loading.textContent = 'Обновление событий...';
+                loading.style.display = 'block';
+                
+                // Отправляем запрос на обновление
+                const response = await fetch('/api/events/update', {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Загружаем обновленные события
+                    await loadEvents();
+                    loading.textContent = 'События успешно обновлены!';
+                    setTimeout(() => {
+                        loading.style.display = 'none';
+                    }, 3000);
+                } else {
+                    loading.textContent = 'Ошибка обновления событий';
+                }
+            } catch (error) {
+                console.error('Error updating events:', error);
+                loading.textContent = 'Ошибка обновления событий';
+            } finally {
+                // Включаем кнопку обратно
+                button.disabled = false;
+            }
+        }
+
+        // Загружаем события при загрузке страницы
+        loadEvents();
+        
+        // Добавляем обработчик для кнопки обновления
+        document.getElementById('updateButton').addEventListener('click', updateEvents);
+    </script>
 </body>
 </html> 
