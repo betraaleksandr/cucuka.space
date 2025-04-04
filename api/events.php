@@ -1,0 +1,94 @@
+<?php
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST');
+header('Access-Control-Allow-Headers: Content-Type');
+
+// Получаем API ключ из переменной окружения или файла конфигурации
+$api_key = getenv('OPENAI_API_KEY');
+if (!$api_key) {
+    // Если переменная окружения не установлена, попробуем прочитать из файла
+    $config_file = __DIR__ . '/../config.php';
+    if (file_exists($config_file)) {
+        include $config_file;
+    }
+}
+
+if (!$api_key) {
+    http_response_code(500);
+    echo json_encode(['error' => 'API ключ не настроен']);
+    exit;
+}
+
+// Функция для запроса к ChatGPT API
+function getEventsFromChatGPT($api_key) {
+    $url = 'https://api.openai.com/v1/chat/completions';
+    
+    $data = [
+        'model' => 'gpt-4-turbo-preview',
+        'messages' => [
+            [
+                'role' => 'system',
+                'content' => 'Ты - помощник по поиску событий в Санкт-Петербурге. Твоя задача - найти 2 интересных мероприятия в апреле 2025 года и вернуть их в формате CSV. ВАЖНО: верни ТОЛЬКО CSV текст, без дополнительного текста. Первая строка должна содержать заголовки: название,дата,категория,описание. Каждая следующая строка должна содержать данные события, разделенные запятыми. Если в поле есть запятые, заключи его в кавычки.'
+            ],
+            [
+                'role' => 'user',
+                'content' => 'Найди 2 интересных мероприятия в Санкт-Петербурге в апреле 2025 года и верни их в CSV формате.'
+            ]
+        ],
+        'temperature' => 0.7
+    ];
+    
+    $options = [
+        'http' => [
+            'header'  => "Content-type: application/json\r\nAuthorization: Bearer $api_key\r\n",
+            'method'  => 'POST',
+            'content' => json_encode($data)
+        ]
+    ];
+    
+    $context  = stream_context_create($options);
+    $result = file_get_contents($url, false, $context);
+    
+    if ($result === FALSE) {
+        throw new Exception('Ошибка при запросе к ChatGPT API');
+    }
+    
+    $response = json_decode($result, true);
+    
+    if (isset($response['error'])) {
+        throw new Exception($response['error']['message']);
+    }
+    
+    $csvText = $response['choices'][0]['message']['content'];
+    
+    // Разбиваем CSV на строки
+    $lines = array_filter(explode("\n", trim($csvText)));
+    
+    // Пропускаем заголовок
+    $events = [];
+    for ($i = 1; $i < count($lines); $i++) {
+        $line = $lines[$i];
+        $fields = str_getcsv($line);
+        
+        if (count($fields) >= 4) {
+            $events[] = [
+                'name' => $fields[0],
+                'date' => $fields[1],
+                'category' => $fields[2],
+                'description' => $fields[3]
+            ];
+        }
+    }
+    
+    return $events;
+}
+
+// Обработка запроса
+try {
+    $events = getEventsFromChatGPT($api_key);
+    echo json_encode(['success' => true, 'events' => $events]);
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+} 

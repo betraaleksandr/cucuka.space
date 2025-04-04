@@ -4,4 +4,6 @@ events.db
 .DS_Store
 *.log
 .vscode/
-.idea/ 
+.idea/
+# Конфигурационные файлы
+config.php 

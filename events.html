@@ -142,7 +142,7 @@
 
     <script src="events-data.js"></script>
     <script>
-        function loadEvents() {
+        async function loadEvents() {
             const errorDiv = document.getElementById('error');
             const tbody = document.querySelector('#eventsTable tbody');
             
@@ -150,16 +150,15 @@
                 errorDiv.style.display = 'none';
                 tbody.innerHTML = '';
                 
-                eventsData.forEach(event => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${event.name}</td>
-                        <td>${event.date}</td>
-                        <td>${event.category}</td>
-                        <td>${event.description || ''}</td>
-                    `;
-                    tbody.appendChild(row);
-                });
+                // Загружаем события из локального хранилища, если они есть
+                const savedEvents = localStorage.getItem('events');
+                if (savedEvents) {
+                    const events = JSON.parse(savedEvents);
+                    displayEvents(events);
+                } else {
+                    // Если нет сохраненных событий, показываем сообщение
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Нет данных о событиях. Нажмите "Обновить события".</td></tr>';
+                }
             } catch (error) {
                 console.error('Error loading events:', error);
                 errorDiv.textContent = 'Ошибка при загрузке событий';
@@ -168,7 +167,28 @@
             }
         }
 
-        function updateEvents() {
+        function displayEvents(events) {
+            const tbody = document.querySelector('#eventsTable tbody');
+            tbody.innerHTML = '';
+            
+            if (events.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Нет данных о событиях</td></tr>';
+                return;
+            }
+            
+            events.forEach(event => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${event.name}</td>
+                    <td>${event.date}</td>
+                    <td>${event.category}</td>
+                    <td>${event.description || ''}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        async function updateEvents() {
             const errorDiv = document.getElementById('error');
             const updateButton = document.getElementById('updateButton');
             
@@ -177,14 +197,27 @@
                 updateButton.textContent = 'Обновление...';
                 errorDiv.style.display = 'none';
                 
-                // В будущем здесь можно добавить логику обновления данных
-                // Например, через localStorage или IndexedDB
+                const response = await fetch('/api/events.php');
                 
-                loadEvents();
+                if (!response.ok) {
+                    throw new Error('Ошибка при запросе к API');
+                }
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Неизвестная ошибка при обновлении событий');
+                }
+                
+                // Сохраняем события в локальное хранилище
+                localStorage.setItem('events', JSON.stringify(data.events));
+                
+                // Отображаем события
+                displayEvents(data.events);
                 errorDiv.style.display = 'none';
             } catch (error) {
                 console.error('Error updating events:', error);
-                errorDiv.textContent = 'Ошибка при обновлении событий';
+                errorDiv.textContent = error.message;
                 errorDiv.style.display = 'block';
             } finally {
                 updateButton.disabled = false;
