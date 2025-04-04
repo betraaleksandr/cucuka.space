@@ -140,24 +140,17 @@
         </table>
     </div>
 
+    <script src="events-data.js"></script>
     <script>
-        async function loadEvents() {
+        function loadEvents() {
             const errorDiv = document.getElementById('error');
             const tbody = document.querySelector('#eventsTable tbody');
             
             try {
                 errorDiv.style.display = 'none';
-                const response = await fetch('/api/events');
-                
-                if (!response.ok) {
-                    const data = await response.json();
-                    throw new Error(data.error || 'Ошибка при загрузке событий');
-                }
-                
-                const events = await response.json();
-                
                 tbody.innerHTML = '';
-                events.forEach(event => {
+                
+                eventsData.forEach(event => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${event.name}</td>
@@ -169,13 +162,13 @@
                 });
             } catch (error) {
                 console.error('Error loading events:', error);
-                errorDiv.textContent = error.message;
+                errorDiv.textContent = 'Ошибка при загрузке событий';
                 errorDiv.style.display = 'block';
                 tbody.innerHTML = '';
             }
         }
 
-        async function updateEvents() {
+        function updateEvents() {
             const errorDiv = document.getElementById('error');
             const updateButton = document.getElementById('updateButton');
             
@@ -184,25 +177,14 @@
                 updateButton.textContent = 'Обновление...';
                 errorDiv.style.display = 'none';
                 
-                const response = await fetch('/api/events/update', {
-                    method: 'POST'
-                });
+                // В будущем здесь можно добавить логику обновления данных
+                // Например, через localStorage или IndexedDB
                 
-                const data = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(data.error || 'Ошибка при обновлении событий');
-                }
-                
-                if (!data.success) {
-                    throw new Error(data.error || 'Неизвестная ошибка при обновлении событий');
-                }
-                
-                await loadEvents();
+                loadEvents();
                 errorDiv.style.display = 'none';
             } catch (error) {
                 console.error('Error updating events:', error);
-                errorDiv.textContent = error.message;
+                errorDiv.textContent = 'Ошибка при обновлении событий';
                 errorDiv.style.display = 'block';
             } finally {
                 updateButton.disabled = false;
