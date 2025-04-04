@@ -13,8 +13,30 @@ error_log('Starting generate_events.php script at ' . date('Y-m-d H:i:s'));
 
 // Получаем API ключ из файла конфигурации
 $config_file = __DIR__ . '/../config.php';
-if (!file_exists($config_file)) {
-    error_log('Config file not found: ' . $config_file);
+// Добавляем отладочную информацию
+error_log('Config file path: ' . $config_file);
+error_log('Current directory: ' . __DIR__);
+error_log('Document root: ' . $_SERVER['DOCUMENT_ROOT']);
+
+// Пробуем несколько вариантов пути к файлу конфигурации
+$config_paths = [
+    __DIR__ . '/../config.php',
+    $_SERVER['DOCUMENT_ROOT'] . '/config.php',
+    dirname(dirname(__FILE__)) . '/config.php'
+];
+
+$config_file = null;
+foreach ($config_paths as $path) {
+    error_log('Trying config path: ' . $path);
+    if (file_exists($path)) {
+        $config_file = $path;
+        error_log('Config file found at: ' . $path);
+        break;
+    }
+}
+
+if (!$config_file) {
+    error_log('Config file not found in any of the following paths: ' . implode(', ', $config_paths));
     die('Файл конфигурации не найден');
 }
 

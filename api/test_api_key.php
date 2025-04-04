@@ -17,22 +17,32 @@ header('Access-Control-Allow-Methods: GET, POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // Получаем API ключ из файла конфигурации
-$api_key = null;
 $config_file = __DIR__ . '/../config.php';
+// Добавляем отладочную информацию
+error_log('Config file path: ' . $config_file);
+error_log('Current directory: ' . __DIR__);
+error_log('Document root: ' . $_SERVER['DOCUMENT_ROOT']);
 
-// Проверяем существование файла конфигурации
-if (!file_exists($config_file)) {
-    error_log('Config file not found: ' . $config_file);
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'error' => 'Файл конфигурации не найден',
-        'debug' => [
-            'config_file_path' => $config_file,
-            'file_exists' => false
-        ]
-    ]);
-    exit;
+// Пробуем несколько вариантов пути к файлу конфигурации
+$config_paths = [
+    __DIR__ . '/../config.php',
+    $_SERVER['DOCUMENT_ROOT'] . '/config.php',
+    dirname(dirname(__FILE__)) . '/config.php'
+];
+
+$config_file = null;
+foreach ($config_paths as $path) {
+    error_log('Trying config path: ' . $path);
+    if (file_exists($path)) {
+        $config_file = $path;
+        error_log('Config file found at: ' . $path);
+        break;
+    }
+}
+
+if (!$config_file) {
+    error_log('Config file not found in any of the following paths: ' . implode(', ', $config_paths));
+    die('Файл конфигурации не найден');
 }
 
 // Включаем файл конфигурации
