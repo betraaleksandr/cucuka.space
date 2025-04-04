@@ -75,6 +75,15 @@
             margin: 2em 0;
             color: #666;
         }
+        .error {
+            text-align: center;
+            margin: 2em 0;
+            color: #e74c3c;
+            padding: 10px;
+            background-color: #fde8e8;
+            border-radius: 5px;
+            display: none;
+        }
         .update-button {
             display: block;
             margin: 2em auto;
@@ -116,14 +125,14 @@
         </div>
         <button id="updateButton" class="update-button">Обновить события</button>
         <div id="loading" class="loading">Загрузка событий...</div>
-        <table>
+        <div id="error" class="error"></div>
+        <table id="eventsTable">
             <thead>
                 <tr>
                     <th>Название</th>
                     <th>Дата</th>
                     <th>Категория</th>
                     <th>Описание</th>
-                    <th>Ссылка на покупку билета</th>
                 </tr>
             </thead>
             <tbody id="eventsTableBody">
@@ -133,66 +142,71 @@
 
     <script>
         async function loadEvents() {
+            const errorDiv = document.getElementById('error');
+            const tbody = document.querySelector('#eventsTable tbody');
+            
             try {
+                errorDiv.style.display = 'none';
                 const response = await fetch('/api/events');
+                
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Ошибка при загрузке событий');
+                }
+                
                 const events = await response.json();
                 
-                const tbody = document.getElementById('eventsTableBody');
-                document.getElementById('loading').style.display = 'none';
-                
-                // Очищаем таблицу
                 tbody.innerHTML = '';
-                
                 events.forEach(event => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${event.name}</td>
                         <td>${event.date}</td>
                         <td>${event.category}</td>
-                        <td>${event.description}</td>
-                        <td>${event.ticket_link ? `<a href="${event.ticket_link}" target="_blank">Купить билет</a>` : '-'}</td>
+                        <td>${event.description || ''}</td>
                     `;
                     tbody.appendChild(row);
                 });
             } catch (error) {
                 console.error('Error loading events:', error);
-                document.getElementById('loading').textContent = 'Ошибка загрузки событий';
+                errorDiv.textContent = error.message;
+                errorDiv.style.display = 'block';
+                tbody.innerHTML = '';
             }
         }
 
         async function updateEvents() {
-            const button = document.getElementById('updateButton');
-            const loading = document.getElementById('loading');
+            const errorDiv = document.getElementById('error');
+            const updateButton = document.getElementById('updateButton');
             
             try {
-                // Отключаем кнопку и показываем загрузку
-                button.disabled = true;
-                loading.textContent = 'Обновление событий...';
-                loading.style.display = 'block';
+                updateButton.disabled = true;
+                updateButton.textContent = 'Обновление...';
+                errorDiv.style.display = 'none';
                 
-                // Отправляем запрос на обновление
                 const response = await fetch('/api/events/update', {
                     method: 'POST'
                 });
                 
-                const result = await response.json();
+                const data = await response.json();
                 
-                if (result.success) {
-                    // Загружаем обновленные события
-                    await loadEvents();
-                    loading.textContent = 'События успешно обновлены!';
-                    setTimeout(() => {
-                        loading.style.display = 'none';
-                    }, 3000);
-                } else {
-                    loading.textContent = 'Ошибка обновления событий';
+                if (!response.ok) {
+                    throw new Error(data.error || 'Ошибка при обновлении событий');
                 }
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Неизвестная ошибка при обновлении событий');
+                }
+                
+                await loadEvents();
+                errorDiv.style.display = 'none';
             } catch (error) {
                 console.error('Error updating events:', error);
-                loading.textContent = 'Ошибка обновления событий';
+                errorDiv.textContent = error.message;
+                errorDiv.style.display = 'block';
             } finally {
-                // Включаем кнопку обратно
-                button.disabled = false;
+                updateButton.disabled = false;
+                updateButton.textContent = 'Обновить события';
             }
         }
 

@@ -23,7 +23,6 @@ db.run(`
     date TEXT NOT NULL,
     category TEXT NOT NULL,
     description TEXT,
-    ticket_link TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )
 `);
@@ -53,11 +52,11 @@ app.post('/api/events/update', async (req, res) => {
       messages: [
         {
           role: "system",
-          content: "Ты - помощник по поиску событий в Санкт-Петербурге. Твоя задача - найти интересные мероприятия в апреле 2025 года и вернуть их в формате CSV. ВАЖНО: верни ТОЛЬКО CSV текст, без дополнительного текста. Первая строка должна содержать заголовки: name,date,category,description,ticket_link. Каждая следующая строка должна содержать данные события, разделенные запятыми. Если в поле есть запятые, заключи его в кавычки."
+          content: "Ты - помощник по поиску событий в Санкт-Петербурге. Твоя задача - найти 2 интересных мероприятия в апреле 2025 года и вернуть их в формате CSV. ВАЖНО: верни ТОЛЬКО CSV текст, без дополнительного текста. Первая строка должна содержать заголовки: название,дата,категория,описание. Каждая следующая строка должна содержать данные события, разделенные запятыми. Если в поле есть запятые, заключи его в кавычки."
         },
         {
           role: "user",
-          content: "Найди 5 интересных мероприятий в Санкт-Петербурге в апреле 2025 года и верни их в CSV формате."
+          content: "Найди 2 интересных мероприятия в Санкт-Петербурге в апреле 2025 года и верни их в CSV формате."
         }
       ],
       temperature: 0.7
@@ -66,28 +65,51 @@ app.post('/api/events/update', async (req, res) => {
     const response = completion.choices[0].message.content;
     console.log('Raw response:', response);
 
+    // Проверяем, что ответ не пустой
+    if (!response || response.trim() === '') {
+      throw new Error('Получен пустой ответ от ChatGPT');
+    }
+
     // Разбиваем ответ на строки и удаляем пустые строки
     const lines = response.trim().split('\n').filter(line => line.trim());
     
+    // Проверяем, что есть хотя бы заголовок и одна строка данных
+    if (lines.length < 2) {
+      throw new Error('Недостаточно данных в ответе ChatGPT');
+    }
+
+    // Проверяем заголовки
+    const headers = lines[0].split(',').map(h => h.trim());
+    const requiredHeaders = ['название', 'дата', 'категория', 'описание'];
+    const missingHeaders = requiredHeaders.filter(h => !headers.includes(h));
+    if (missingHeaders.length > 0) {
+      throw new Error(`Отсутствуют обязательные заголовки: ${missingHeaders.join(', ')}`);
+    }
+    
     // Пропускаем заголовок
     const events = lines.slice(1).map(line => {
-      const [name, date, category, description, ticket_link] = line.split(',').map(field => 
+      const [name, date, category, description] = line.split(',').map(field => 
         field.trim().replace(/^"|"$/g, '') // Удаляем кавычки, если они есть
       );
-      return { name, date, category, description, ticket_link };
+      return { name, date, category, description };
     });
+
+    // Проверяем, что все события имеют обязательные поля
+    const invalidEvents = events.filter(event => !event.name || !event.date || !event.category);
+    if (invalidEvents.length > 0) {
+      throw new Error('Некоторые события не содержат обязательных полей');
+    }
 
     // Очищаем старые события
     db.run('DELETE FROM events', (err) => {
       if (err) {
-        res.status(500).json({ error: err.message });
-        return;
+        throw new Error(`Ошибка очистки базы данных: ${err.message}`);
       }
 
       // Добавляем новые события
       const stmt = db.prepare(`
-        INSERT INTO events (name, date, category, description, ticket_link)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO events (name, date, category, description)
+        VALUES (?, ?, ?, ?)
       `);
 
       events.forEach(event => {
@@ -96,8 +118,7 @@ app.post('/api/events/update', async (req, res) => {
             event.name,
             event.date,
             event.category,
-            event.description || '',
-            event.ticket_link || ''
+            event.description || ''
           );
         }
       });
@@ -107,7 +128,10 @@ app.post('/api/events/update', async (req, res) => {
     });
   } catch (error) {
     console.error('Error updating events:', error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ 
+      success: false, 
+      error: error.message || 'Неизвестная ошибка при обновлении событий'
+    });
   }
 });
 
