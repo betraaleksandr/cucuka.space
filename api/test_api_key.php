@@ -60,11 +60,11 @@ $api_key = $OPENAI_API_KEY;
 $debug_info = [
     'config_file_exists' => file_exists($config_file),
     'config_file_path' => $config_file,
-    'api_key_set' => !empty($api_key),
-    'api_key_length' => $api_key ? strlen($api_key) : 0,
-    'api_key_prefix' => $api_key ? substr($api_key, 0, 10) . '...' : 'none',
+    'api_key_set' => isset($OPENAI_API_KEY),
+    'api_key_length' => isset($api_key) ? strlen($api_key) : 0,
+    'api_key_prefix' => isset($api_key) ? substr($api_key, 0, 10) . '...' : 'none',
     'php_version' => PHP_VERSION,
-    'server_software' => $_SERVER['SERVER_SOFTWARE'] ?? 'unknown',
+    'server_software' => isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : 'unknown',
     'request_method' => $_SERVER['REQUEST_METHOD'],
     'request_uri' => $_SERVER['REQUEST_URI']
 ];
@@ -82,7 +82,7 @@ echo json_encode([
     'api_key_valid' => $api_key_format_valid && $api_key_length_valid,
     'api_key_format_valid' => $api_key_format_valid,
     'api_key_length_valid' => $api_key_length_valid,
-    'api_key_prefix' => substr($api_key, 0, 10) . '...',
+    'api_key_prefix' => isset($api_key) ? substr($api_key, 0, 10) . '...' : 'none',
     'api_key_length' => strlen($api_key),
     'debug' => $debug_info
 ]); 

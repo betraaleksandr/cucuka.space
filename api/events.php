@@ -19,7 +19,7 @@ header('Access-Control-Allow-Headers: Content-Type');
 // Отладочная информация
 $debug_info = [
     'php_version' => PHP_VERSION,
-    'server_software' => $_SERVER['SERVER_SOFTWARE'] ?? 'unknown',
+    'server_software' => isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : 'unknown',
     'request_method' => $_SERVER['REQUEST_METHOD'],
     'request_uri' => $_SERVER['REQUEST_URI']
 ];

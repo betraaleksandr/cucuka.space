@@ -99,7 +99,8 @@ function getEventsFromChatGPT($api_key) {
         
         if (isset($response['error'])) {
             error_log('OpenAI API error: ' . print_r($response['error'], true));
-            throw new Exception($response['error']['message'] ?? 'Неизвестная ошибка от ChatGPT API');
+            $errorMessage = isset($response['error']['message']) ? $response['error']['message'] : 'Неизвестная ошибка от ChatGPT API';
+            throw new Exception($errorMessage);
         }
         
         if (!isset($response['choices'][0]['message']['content'])) {

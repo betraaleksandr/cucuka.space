@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Проверяем наличие API ключа в запросе
-$apiKey = $_POST['api_key'] ?? '';
+$apiKey = isset($_POST['api_key']) ? $_POST['api_key'] : '';
 if (empty($apiKey)) {
     http_response_code(400);
     echo json_encode([
