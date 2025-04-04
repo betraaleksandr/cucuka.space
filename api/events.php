@@ -90,24 +90,36 @@ function getEventsFromChatGPT($api_key) {
         'temperature' => 0.7
     ];
     
-    $options = [
-        'http' => [
-            'header'  => "Content-type: application/json\r\nAuthorization: Bearer $api_key\r\n",
-            'method'  => 'POST',
-            'content' => json_encode($data)
-        ]
-    ];
-    
     error_log('Sending request to OpenAI API');
-    $context = stream_context_create($options);
+    
+    // Инициализируем cURL
+    $ch = curl_init($url);
+    
+    // Устанавливаем параметры cURL
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Authorization: Bearer ' . $api_key
+    ]);
     
     try {
-        $result = file_get_contents($url, false, $context);
+        // Выполняем запрос
+        $result = curl_exec($ch);
         
+        // Проверяем на ошибки cURL
         if ($result === FALSE) {
-            $error = error_get_last();
-            error_log('Error in file_get_contents: ' . print_r($error, true));
-            throw new Exception('Ошибка при запросе к ChatGPT API: ' . ($error['message'] ?? 'Неизвестная ошибка'));
+            $error = curl_error($ch);
+            error_log('cURL error: ' . $error);
+            throw new Exception('Ошибка при запросе к ChatGPT API: ' . $error);
+        }
+        
+        // Получаем HTTP код ответа
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($httpCode !== 200) {
+            error_log('HTTP error: ' . $httpCode . ', Response: ' . $result);
+            throw new Exception('Ошибка HTTP при запросе к ChatGPT API: ' . $httpCode);
         }
         
         error_log('Received response from OpenAI API: ' . substr($result, 0, 100) . '...');
@@ -155,6 +167,9 @@ function getEventsFromChatGPT($api_key) {
     } catch (Exception $e) {
         error_log('Exception in getEventsFromChatGPT: ' . $e->getMessage());
         throw $e;
+    } finally {
+        // Закрываем cURL сессию
+        curl_close($ch);
     }
 }
 
