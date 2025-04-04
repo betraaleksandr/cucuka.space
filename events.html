@@ -119,22 +119,34 @@
     <div class="container mt-5">
         <h1 class="text-center mb-4">События в Санкт-Петербурге</h1>
         <div class="text-center mb-4">
-            <button id="updateEvents" class="btn btn-primary">Обновить события</button>
+            <button id="updateEvents" class="update-button">Обновить события</button>
             <p id="lastUpdate" class="mt-2 text-muted">Последнее обновление: <span id="lastUpdateDate">Неизвестно</span></p>
         </div>
-        <div id="eventsContainer" class="row">
-            <!-- События будут добавлены здесь -->
+        <div id="eventsContainer">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Дата</th>
+                        <th>Категория</th>
+                        <th>Описание</th>
+                    </tr>
+                </thead>
+                <tbody id="eventsTableBody">
+                    <!-- События будут добавлены здесь -->
+                </tbody>
+            </table>
         </div>
     </div>
 
     <script>
         // Функция для обновления событий
         function updateEvents() {
-            const eventsContainer = document.getElementById('eventsContainer');
+            const eventsTableBody = document.getElementById('eventsTableBody');
             const lastUpdateDate = document.getElementById('lastUpdateDate');
             
             // Показываем индикатор загрузки
-            eventsContainer.innerHTML = '<div class="col-12 text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Загрузка...</span></div></div>';
+            eventsTableBody.innerHTML = '<tr><td colspan="4" class="loading">Загрузка событий...</td></tr>';
             
             // Запрашиваем события с сервера
             fetch('api/events.php')
@@ -149,28 +161,23 @@
                         // Обновляем дату последнего обновления
                         lastUpdateDate.textContent = data.lastUpdate || 'Неизвестно';
                         
-                        // Очищаем контейнер событий
-                        eventsContainer.innerHTML = '';
+                        // Очищаем таблицу
+                        eventsTableBody.innerHTML = '';
                         
-                        // Добавляем события на страницу
+                        // Добавляем события в таблицу
                         if (data.events && data.events.length > 0) {
                             data.events.forEach(event => {
-                                const eventCard = document.createElement('div');
-                                eventCard.className = 'col-md-6 mb-4';
-                                eventCard.innerHTML = `
-                                    <div class="card h-100">
-                                        <div class="card-body">
-                                            <h5 class="card-title">${event.name}</h5>
-                                            <h6 class="card-subtitle mb-2 text-muted">${event.date}</h6>
-                                            <p class="card-text"><strong>Категория:</strong> ${event.category}</p>
-                                            <p class="card-text">${event.description}</p>
-                                        </div>
-                                    </div>
+                                const tr = document.createElement('tr');
+                                tr.innerHTML = `
+                                    <td>${event.name}</td>
+                                    <td>${event.date}</td>
+                                    <td>${event.category}</td>
+                                    <td>${event.description}</td>
                                 `;
-                                eventsContainer.appendChild(eventCard);
+                                eventsTableBody.appendChild(tr);
                             });
                         } else {
-                            eventsContainer.innerHTML = '<div class="col-12 text-center"><p>События не найдены</p></div>';
+                            eventsTableBody.innerHTML = '<tr><td colspan="4" class="text-center">События не найдены</td></tr>';
                         }
                         
                         // Сохраняем события в localStorage
@@ -182,7 +189,7 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    eventsContainer.innerHTML = `<div class="col-12 text-center"><p class="text-danger">Ошибка при загрузке событий: ${error.message}</p></div>`;
+                    eventsTableBody.innerHTML = `<tr><td colspan="4" class="error">Ошибка при загрузке событий: ${error.message}</td></tr>`;
                 });
         }
         
@@ -195,34 +202,29 @@
             if (savedEvents) {
                 // Отображаем сохраненные события
                 const events = JSON.parse(savedEvents);
-                const eventsContainer = document.getElementById('eventsContainer');
+                const eventsTableBody = document.getElementById('eventsTableBody');
                 const lastUpdateDate = document.getElementById('lastUpdateDate');
                 
                 // Обновляем дату последнего обновления
                 lastUpdateDate.textContent = savedLastUpdate || 'Неизвестно';
                 
-                // Очищаем контейнер событий
-                eventsContainer.innerHTML = '';
+                // Очищаем таблицу
+                eventsTableBody.innerHTML = '';
                 
-                // Добавляем события на страницу
+                // Добавляем события в таблицу
                 if (events.length > 0) {
                     events.forEach(event => {
-                        const eventCard = document.createElement('div');
-                        eventCard.className = 'col-md-6 mb-4';
-                        eventCard.innerHTML = `
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title">${event.name}</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">${event.date}</h6>
-                                    <p class="card-text"><strong>Категория:</strong> ${event.category}</p>
-                                    <p class="card-text">${event.description}</p>
-                                </div>
-                            </div>
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${event.name}</td>
+                            <td>${event.date}</td>
+                            <td>${event.category}</td>
+                            <td>${event.description}</td>
                         `;
-                        eventsContainer.appendChild(eventCard);
+                        eventsTableBody.appendChild(tr);
                     });
                 } else {
-                    eventsContainer.innerHTML = '<div class="col-12 text-center"><p>События не найдены</p></div>';
+                    eventsTableBody.innerHTML = '<tr><td colspan="4" class="text-center">События не найдены</td></tr>';
                 }
             } else {
                 // Если нет сохраненных событий, загружаем их с сервера
