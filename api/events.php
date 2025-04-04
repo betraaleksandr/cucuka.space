@@ -16,52 +16,8 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Получаем API ключ из переменной окружения или файла конфигурации
-$api_key = null;
-$config_file = __DIR__ . '/../config.php';
-
-// Проверяем существование файла конфигурации
-if (!file_exists($config_file)) {
-    error_log('Config file not found: ' . $config_file);
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'error' => 'Файл конфигурации не найден',
-        'debug' => [
-            'config_file_path' => $config_file,
-            'file_exists' => false
-        ]
-    ]);
-    exit;
-}
-
-// Включаем файл конфигурации
-include $config_file;
-
-// Проверяем, установлен ли API ключ
-if (!isset($OPENAI_API_KEY) || empty($OPENAI_API_KEY)) {
-    error_log('API key not set in config file');
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'error' => 'API ключ не настроен в файле конфигурации',
-        'debug' => [
-            'config_file_path' => $config_file,
-            'api_key_set' => isset($OPENAI_API_KEY),
-            'api_key_length' => isset($OPENAI_API_KEY) ? strlen($OPENAI_API_KEY) : 0
-        ]
-    ]);
-    exit;
-}
-
-$api_key = $OPENAI_API_KEY;
-
 // Отладочная информация
 $debug_info = [
-    'config_file_exists' => file_exists($config_file),
-    'config_file_path' => $config_file,
-    'api_key_set' => !empty($api_key),
-    'api_key_length' => $api_key ? strlen($api_key) : 0,
     'php_version' => PHP_VERSION,
     'server_software' => $_SERVER['SERVER_SOFTWARE'] ?? 'unknown',
     'request_method' => $_SERVER['REQUEST_METHOD'],
@@ -71,121 +27,72 @@ $debug_info = [
 // Логируем отладочную информацию
 error_log('Debug info: ' . print_r($debug_info, true));
 
-// Функция для запроса к ChatGPT API
-function getEventsFromChatGPT($api_key) {
-    $url = 'https://api.openai.com/v1/chat/completions';
+// Функция для чтения событий из CSV-файла
+function getEventsFromCSV() {
+    $csvFile = __DIR__ . '/../data/events.csv';
+    $lastUpdateFile = __DIR__ . '/../data/last_update.txt';
     
-    $data = [
-        'model' => 'gpt-4-turbo-preview',
-        'messages' => [
-            [
-                'role' => 'system',
-                'content' => 'Ты - помощник по поиску событий в Санкт-Петербурге. Твоя задача - найти 2 интересных мероприятия в апреле 2025 года и вернуть их в формате CSV. ВАЖНО: верни ТОЛЬКО CSV текст, без дополнительного текста. Первая строка должна содержать заголовки: название,дата,категория,описание. Каждая следующая строка должна содержать данные события, разделенные запятыми. Если в поле есть запятые, заключи его в кавычки.'
-            ],
-            [
-                'role' => 'user',
-                'content' => 'Найди 2 интересных мероприятия в Санкт-Петербурге в апреле 2025 года и верни их в CSV формате.'
-            ]
-        ],
-        'temperature' => 0.7
-    ];
-    
-    error_log('Sending request to OpenAI API');
-    
-    // Инициализируем cURL
-    $ch = curl_init($url);
-    
-    // Устанавливаем параметры cURL
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'Content-Type: application/json',
-        'Authorization: Bearer ' . $api_key
-    ]);
-    
-    try {
-        // Выполняем запрос
-        $result = curl_exec($ch);
-        
-        // Проверяем на ошибки cURL
-        if ($result === FALSE) {
-            $error = curl_error($ch);
-            error_log('cURL error: ' . $error);
-            throw new Exception('Ошибка при запросе к ChatGPT API: ' . $error);
-        }
-        
-        // Получаем HTTP код ответа
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if ($httpCode !== 200) {
-            error_log('HTTP error: ' . $httpCode . ', Response: ' . $result);
-            throw new Exception('Ошибка HTTP при запросе к ChatGPT API: ' . $httpCode);
-        }
-        
-        error_log('Received response from OpenAI API: ' . substr($result, 0, 100) . '...');
-        
-        $response = json_decode($result, true);
-        
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            error_log('JSON decode error: ' . json_last_error_msg());
-            throw new Exception('Ошибка при разборе ответа от ChatGPT API: ' . json_last_error_msg());
-        }
-        
-        if (isset($response['error'])) {
-            error_log('OpenAI API error: ' . print_r($response['error'], true));
-            throw new Exception($response['error']['message'] ?? 'Неизвестная ошибка от ChatGPT API');
-        }
-        
-        if (!isset($response['choices'][0]['message']['content'])) {
-            error_log('Unexpected response format: ' . print_r($response, true));
-            throw new Exception('Неожиданный формат ответа от ChatGPT API');
-        }
-        
-        $csvText = $response['choices'][0]['message']['content'];
-        error_log('CSV text: ' . $csvText);
-        
-        // Разбиваем CSV на строки
-        $lines = array_filter(explode("\n", trim($csvText)));
-        
-        // Пропускаем заголовок
-        $events = [];
-        for ($i = 1; $i < count($lines); $i++) {
-            $line = $lines[$i];
-            $fields = str_getcsv($line);
-            
-            if (count($fields) >= 4) {
-                $events[] = [
-                    'name' => $fields[0],
-                    'date' => $fields[1],
-                    'category' => $fields[2],
-                    'description' => $fields[3]
-                ];
-            }
-        }
-        
-        return $events;
-    } catch (Exception $e) {
-        error_log('Exception in getEventsFromChatGPT: ' . $e->getMessage());
-        throw $e;
-    } finally {
-        // Закрываем cURL сессию
-        curl_close($ch);
+    // Проверяем существование файла
+    if (!file_exists($csvFile)) {
+        error_log('CSV file not found: ' . $csvFile);
+        throw new Exception('Файл с событиями не найден. Пожалуйста, запустите скрипт генерации событий.');
     }
+    
+    // Читаем содержимое файла
+    $csvContent = file_get_contents($csvFile);
+    if ($csvContent === false) {
+        error_log('Failed to read CSV file: ' . $csvFile);
+        throw new Exception('Не удалось прочитать файл с событиями');
+    }
+    
+    // Разбиваем CSV на строки
+    $lines = array_filter(explode("\n", trim($csvContent)));
+    
+    // Проверяем, что файл не пустой
+    if (count($lines) < 2) {
+        error_log('CSV file is empty or has only headers: ' . $csvFile);
+        throw new Exception('Файл с событиями пуст или содержит только заголовки');
+    }
+    
+    // Пропускаем заголовок
+    $events = [];
+    for ($i = 1; $i < count($lines); $i++) {
+        $line = $lines[$i];
+        $fields = str_getcsv($line);
+        
+        if (count($fields) >= 4) {
+            $events[] = [
+                'name' => $fields[0],
+                'date' => $fields[1],
+                'category' => $fields[2],
+                'description' => $fields[3]
+            ];
+        }
+    }
+    
+    // Получаем дату последнего обновления
+    $lastUpdate = file_exists($lastUpdateFile) ? file_get_contents($lastUpdateFile) : 'Неизвестно';
+    
+    return [
+        'events' => $events,
+        'lastUpdate' => $lastUpdate
+    ];
 }
 
 // Обработка запроса
 try {
-    // Получаем события от ChatGPT
-    $events = getEventsFromChatGPT($api_key);
+    // Получаем события из CSV-файла
+    $result = getEventsFromCSV();
     
     // Возвращаем успешный ответ
     echo json_encode([
         'success' => true,
-        'events' => $events
+        'events' => $result['events'],
+        'lastUpdate' => $result['lastUpdate']
     ]);
 } catch (Exception $e) {
     // Логируем ошибку
-    error_log('Error in getEventsFromChatGPT: ' . $e->getMessage());
+    error_log('Error in getEventsFromCSV: ' . $e->getMessage());
     
     // Возвращаем ошибку
     http_response_code(500);

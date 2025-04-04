@@ -116,121 +116,122 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>События</h1>
-        <div class="nav">
-            <a href="/">На главную</a>
-            <a href="/about">О нас</a>
-            <a href="/ustin">Устин</a>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">События в Санкт-Петербурге</h1>
+        <div class="text-center mb-4">
+            <button id="updateEvents" class="btn btn-primary">Обновить события</button>
+            <p id="lastUpdate" class="mt-2 text-muted">Последнее обновление: <span id="lastUpdateDate">Неизвестно</span></p>
         </div>
-        <button id="updateButton" class="update-button">Обновить события</button>
-        <div id="loading" class="loading">Загрузка событий...</div>
-        <div id="error" class="error"></div>
-        <table id="eventsTable">
-            <thead>
-                <tr>
-                    <th>Название</th>
-                    <th>Дата</th>
-                    <th>Категория</th>
-                    <th>Описание</th>
-                </tr>
-            </thead>
-            <tbody id="eventsTableBody">
-            </tbody>
-        </table>
+        <div id="eventsContainer" class="row">
+            <!-- События будут добавлены здесь -->
+        </div>
     </div>
 
     <script>
-        async function loadEvents() {
-            const errorDiv = document.getElementById('error');
-            const tbody = document.querySelector('#eventsTable tbody');
+        // Функция для обновления событий
+        function updateEvents() {
+            const eventsContainer = document.getElementById('eventsContainer');
+            const lastUpdateDate = document.getElementById('lastUpdateDate');
             
-            try {
-                errorDiv.style.display = 'none';
-                tbody.innerHTML = '';
-                
-                // Загружаем события из локального хранилища, если они есть
-                const savedEvents = localStorage.getItem('events');
-                if (savedEvents) {
-                    const events = JSON.parse(savedEvents);
-                    displayEvents(events);
-                } else {
-                    // Если нет сохраненных событий, показываем сообщение
-                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Нет данных о событиях. Нажмите "Обновить события".</td></tr>';
-                }
-            } catch (error) {
-                console.error('Error loading events:', error);
-                errorDiv.textContent = 'Ошибка при загрузке событий';
-                errorDiv.style.display = 'block';
-                tbody.innerHTML = '';
-            }
+            // Показываем индикатор загрузки
+            eventsContainer.innerHTML = '<div class="col-12 text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Загрузка...</span></div></div>';
+            
+            // Запрашиваем события с сервера
+            fetch('api/events.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('HTTP error! status: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Обновляем дату последнего обновления
+                        lastUpdateDate.textContent = data.lastUpdate || 'Неизвестно';
+                        
+                        // Очищаем контейнер событий
+                        eventsContainer.innerHTML = '';
+                        
+                        // Добавляем события на страницу
+                        if (data.events && data.events.length > 0) {
+                            data.events.forEach(event => {
+                                const eventCard = document.createElement('div');
+                                eventCard.className = 'col-md-6 mb-4';
+                                eventCard.innerHTML = `
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${event.name}</h5>
+                                            <h6 class="card-subtitle mb-2 text-muted">${event.date}</h6>
+                                            <p class="card-text"><strong>Категория:</strong> ${event.category}</p>
+                                            <p class="card-text">${event.description}</p>
+                                        </div>
+                                    </div>
+                                `;
+                                eventsContainer.appendChild(eventCard);
+                            });
+                        } else {
+                            eventsContainer.innerHTML = '<div class="col-12 text-center"><p>События не найдены</p></div>';
+                        }
+                        
+                        // Сохраняем события в localStorage
+                        localStorage.setItem('events', JSON.stringify(data.events));
+                        localStorage.setItem('lastUpdate', data.lastUpdate || 'Неизвестно');
+                    } else {
+                        throw new Error(data.error || 'Неизвестная ошибка');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    eventsContainer.innerHTML = `<div class="col-12 text-center"><p class="text-danger">Ошибка при загрузке событий: ${error.message}</p></div>`;
+                });
         }
-
-        function displayEvents(events) {
-            const tbody = document.querySelector('#eventsTable tbody');
-            tbody.innerHTML = '';
-            
-            if (events.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Нет данных о событиях</td></tr>';
-                return;
-            }
-            
-            events.forEach(event => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${event.name}</td>
-                    <td>${event.date}</td>
-                    <td>${event.category}</td>
-                    <td>${event.description || ''}</td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        async function updateEvents() {
-            const errorDiv = document.getElementById('error');
-            const updateButton = document.getElementById('updateButton');
-            errorDiv.style.display = 'none';
-            
-            try {
-                updateButton.disabled = true;
-                updateButton.textContent = 'Обновление...';
-                
-                const response = await fetch('api/events.php');
-                const data = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                if (!data.success) {
-                    throw new Error(data.error || 'Неизвестная ошибка при обновлении событий');
-                }
-                
-                // Сохраняем события в localStorage
-                localStorage.setItem('events', JSON.stringify(data.events));
-                
-                // Обновляем таблицу
-                displayEvents(data.events);
-            } catch (error) {
-                console.error('Error:', error);
-                errorDiv.textContent = `Ошибка при обновлении событий: ${error.message}`;
-                if (error.response) {
-                    const errorData = await error.response.json();
-                    errorDiv.textContent += `\nДетали: ${JSON.stringify(errorData, null, 2)}`;
-                }
-                errorDiv.style.display = 'block';
-            } finally {
-                updateButton.disabled = false;
-                updateButton.textContent = 'Обновить события';
-            }
-        }
-
-        // Загружаем события при загрузке страницы
-        loadEvents();
         
-        // Добавляем обработчик для кнопки обновления
-        document.getElementById('updateButton').addEventListener('click', updateEvents);
+        // Загружаем события при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Проверяем, есть ли сохраненные события в localStorage
+            const savedEvents = localStorage.getItem('events');
+            const savedLastUpdate = localStorage.getItem('lastUpdate');
+            
+            if (savedEvents) {
+                // Отображаем сохраненные события
+                const events = JSON.parse(savedEvents);
+                const eventsContainer = document.getElementById('eventsContainer');
+                const lastUpdateDate = document.getElementById('lastUpdateDate');
+                
+                // Обновляем дату последнего обновления
+                lastUpdateDate.textContent = savedLastUpdate || 'Неизвестно';
+                
+                // Очищаем контейнер событий
+                eventsContainer.innerHTML = '';
+                
+                // Добавляем события на страницу
+                if (events.length > 0) {
+                    events.forEach(event => {
+                        const eventCard = document.createElement('div');
+                        eventCard.className = 'col-md-6 mb-4';
+                        eventCard.innerHTML = `
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">${event.name}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">${event.date}</h6>
+                                    <p class="card-text"><strong>Категория:</strong> ${event.category}</p>
+                                    <p class="card-text">${event.description}</p>
+                                </div>
+                            </div>
+                        `;
+                        eventsContainer.appendChild(eventCard);
+                    });
+                } else {
+                    eventsContainer.innerHTML = '<div class="col-12 text-center"><p>События не найдены</p></div>';
+                }
+            } else {
+                // Если нет сохраненных событий, загружаем их с сервера
+                updateEvents();
+            }
+        });
+        
+        // Обработчик нажатия на кнопку "Обновить события"
+        document.getElementById('updateEvents').addEventListener('click', updateEvents);
     </script>
 </body>
 </html> 
