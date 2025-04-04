@@ -1,4 +1,9 @@
 <?php
+// Включаем отображение ошибок для отладки
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST');
@@ -14,9 +19,20 @@ if (!$api_key) {
     }
 }
 
+// Отладочная информация
+$debug_info = [
+    'config_file_exists' => file_exists($config_file),
+    'config_file_path' => $config_file,
+    'api_key_set' => !empty($api_key),
+    'api_key_length' => strlen($api_key)
+];
+
 if (!$api_key) {
     http_response_code(500);
-    echo json_encode(['error' => 'API ключ не настроен']);
+    echo json_encode([
+        'error' => 'API ключ не настроен',
+        'debug' => $debug_info
+    ]);
     exit;
 }
 

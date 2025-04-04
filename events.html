@@ -197,7 +197,7 @@
                 updateButton.textContent = 'Обновление...';
                 errorDiv.style.display = 'none';
                 
-                const response = await fetch('/api/events.php');
+                const response = await fetch('api/events.php');
                 
                 if (!response.ok) {
                     throw new Error('Ошибка при запросе к API');
