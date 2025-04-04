@@ -120,9 +120,23 @@ function getEventsFromChatGPT($api_key) {
 
 // Обработка запроса
 try {
+    // Получаем события от ChatGPT
     $events = getEventsFromChatGPT($api_key);
-    echo json_encode(['success' => true, 'events' => $events]);
+    
+    // Возвращаем успешный ответ
+    echo json_encode([
+        'success' => true,
+        'events' => $events
+    ]);
 } catch (Exception $e) {
+    // Логируем ошибку
+    error_log('Error in getEventsFromChatGPT: ' . $e->getMessage());
+    
+    // Возвращаем ошибку
     http_response_code(500);
-    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    echo json_encode([
+        'success' => false,
+        'error' => $e->getMessage(),
+        'debug' => $debug_info
+    ]);
 } 

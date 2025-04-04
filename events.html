@@ -191,33 +191,35 @@
         async function updateEvents() {
             const errorDiv = document.getElementById('error');
             const updateButton = document.getElementById('updateButton');
+            errorDiv.style.display = 'none';
             
             try {
                 updateButton.disabled = true;
                 updateButton.textContent = 'Обновление...';
-                errorDiv.style.display = 'none';
                 
                 const response = await fetch('api/events.php');
+                const data = await response.json();
                 
                 if (!response.ok) {
-                    throw new Error('Ошибка при запросе к API');
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
-                const data = await response.json();
                 
                 if (!data.success) {
                     throw new Error(data.error || 'Неизвестная ошибка при обновлении событий');
                 }
                 
-                // Сохраняем события в локальное хранилище
+                // Сохраняем события в localStorage
                 localStorage.setItem('events', JSON.stringify(data.events));
                 
-                // Отображаем события
+                // Обновляем таблицу
                 displayEvents(data.events);
-                errorDiv.style.display = 'none';
             } catch (error) {
-                console.error('Error updating events:', error);
-                errorDiv.textContent = error.message;
+                console.error('Error:', error);
+                errorDiv.textContent = `Ошибка при обновлении событий: ${error.message}`;
+                if (error.response) {
+                    const errorData = await error.response.json();
+                    errorDiv.textContent += `\nДетали: ${JSON.stringify(errorData, null, 2)}`;
+                }
                 errorDiv.style.display = 'block';
             } finally {
                 updateButton.disabled = false;
