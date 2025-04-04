@@ -8,6 +8,9 @@ error_reporting(E_ALL);
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/error.log');
 
+// Логируем все запросы
+error_log('Request received: ' . $_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI']);
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST');
@@ -17,16 +20,41 @@ header('Access-Control-Allow-Headers: Content-Type');
 $api_key = null;
 $config_file = __DIR__ . '/../config.php';
 
-if (file_exists($config_file)) {
-    include $config_file;
-    if (isset($OPENAI_API_KEY)) {
-        $api_key = $OPENAI_API_KEY;
-    }
+// Проверяем существование файла конфигурации
+if (!file_exists($config_file)) {
+    error_log('Config file not found: ' . $config_file);
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Файл конфигурации не найден',
+        'debug' => [
+            'config_file_path' => $config_file,
+            'file_exists' => false
+        ]
+    ]);
+    exit;
 }
 
-if (!$api_key) {
-    $api_key = getenv('OPENAI_API_KEY');
+// Включаем файл конфигурации
+include $config_file;
+
+// Проверяем, установлен ли API ключ
+if (!isset($OPENAI_API_KEY) || empty($OPENAI_API_KEY)) {
+    error_log('API key not set in config file');
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'error' => 'API ключ не настроен в файле конфигурации',
+        'debug' => [
+            'config_file_path' => $config_file,
+            'api_key_set' => isset($OPENAI_API_KEY),
+            'api_key_length' => isset($OPENAI_API_KEY) ? strlen($OPENAI_API_KEY) : 0
+        ]
+    ]);
+    exit;
 }
+
+$api_key = $OPENAI_API_KEY;
 
 // Отладочная информация
 $debug_info = [
@@ -42,17 +70,6 @@ $debug_info = [
 
 // Логируем отладочную информацию
 error_log('Debug info: ' . print_r($debug_info, true));
-
-if (!$api_key) {
-    $error_message = 'API ключ не настроен';
-    error_log($error_message . '. Debug info: ' . print_r($debug_info, true));
-    http_response_code(500);
-    echo json_encode([
-        'error' => $error_message,
-        'debug' => $debug_info
-    ]);
-    exit;
-}
 
 // Функция для запроса к ChatGPT API
 function getEventsFromChatGPT($api_key) {
@@ -81,41 +98,64 @@ function getEventsFromChatGPT($api_key) {
         ]
     ];
     
-    $context  = stream_context_create($options);
-    $result = file_get_contents($url, false, $context);
+    error_log('Sending request to OpenAI API');
+    $context = stream_context_create($options);
     
-    if ($result === FALSE) {
-        throw new Exception('Ошибка при запросе к ChatGPT API');
-    }
-    
-    $response = json_decode($result, true);
-    
-    if (isset($response['error'])) {
-        throw new Exception($response['error']['message']);
-    }
-    
-    $csvText = $response['choices'][0]['message']['content'];
-    
-    // Разбиваем CSV на строки
-    $lines = array_filter(explode("\n", trim($csvText)));
-    
-    // Пропускаем заголовок
-    $events = [];
-    for ($i = 1; $i < count($lines); $i++) {
-        $line = $lines[$i];
-        $fields = str_getcsv($line);
+    try {
+        $result = file_get_contents($url, false, $context);
         
-        if (count($fields) >= 4) {
-            $events[] = [
-                'name' => $fields[0],
-                'date' => $fields[1],
-                'category' => $fields[2],
-                'description' => $fields[3]
-            ];
+        if ($result === FALSE) {
+            $error = error_get_last();
+            error_log('Error in file_get_contents: ' . print_r($error, true));
+            throw new Exception('Ошибка при запросе к ChatGPT API: ' . ($error['message'] ?? 'Неизвестная ошибка'));
         }
+        
+        error_log('Received response from OpenAI API: ' . substr($result, 0, 100) . '...');
+        
+        $response = json_decode($result, true);
+        
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            error_log('JSON decode error: ' . json_last_error_msg());
+            throw new Exception('Ошибка при разборе ответа от ChatGPT API: ' . json_last_error_msg());
+        }
+        
+        if (isset($response['error'])) {
+            error_log('OpenAI API error: ' . print_r($response['error'], true));
+            throw new Exception($response['error']['message'] ?? 'Неизвестная ошибка от ChatGPT API');
+        }
+        
+        if (!isset($response['choices'][0]['message']['content'])) {
+            error_log('Unexpected response format: ' . print_r($response, true));
+            throw new Exception('Неожиданный формат ответа от ChatGPT API');
+        }
+        
+        $csvText = $response['choices'][0]['message']['content'];
+        error_log('CSV text: ' . $csvText);
+        
+        // Разбиваем CSV на строки
+        $lines = array_filter(explode("\n", trim($csvText)));
+        
+        // Пропускаем заголовок
+        $events = [];
+        for ($i = 1; $i < count($lines); $i++) {
+            $line = $lines[$i];
+            $fields = str_getcsv($line);
+            
+            if (count($fields) >= 4) {
+                $events[] = [
+                    'name' => $fields[0],
+                    'date' => $fields[1],
+                    'category' => $fields[2],
+                    'description' => $fields[3]
+                ];
+            }
+        }
+        
+        return $events;
+    } catch (Exception $e) {
+        error_log('Exception in getEventsFromChatGPT: ' . $e->getMessage());
+        throw $e;
     }
-    
-    return $events;
 }
 
 // Обработка запроса
