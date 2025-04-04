@@ -10,120 +10,157 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://cucuka.space/events">
     <link rel="canonical" href="https://cucuka.space/events">
-    <title>События - Cucuka.space</title>
+    <title>События в Санкт-Петербурге - Cucuka.space</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f5f5f5;
-            padding: 20px;
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --background-color: #f5f5f5;
+            --text-color: #333;
+            --border-color: #ddd;
         }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
         .container {
             max-width: 1200px;
-            width: 100%;
-            animation: fadeIn 1.5s ease-in;
+            margin: 0 auto;
+            padding: 20px;
         }
-        h1 {
-            color: #2c3e50;
-            font-size: 3em;
-            text-align: center;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-            margin-bottom: 1em;
-        }
-        .nav {
-            margin: 2em 0;
-            text-align: center;
-        }
-        .nav a {
-            color: #3498db;
-            text-decoration: none;
-            font-size: 1.1em;
-            margin: 0 10px;
-            transition: color 0.3s;
-        }
-        .nav a:hover {
-            color: #2980b9;
-            text-decoration: underline;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 2em;
-            background-color: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #3498db;
+
+        header {
+            background-color: var(--primary-color);
             color: white;
-            font-weight: bold;
-        }
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        .loading {
+            padding: 2rem 0;
             text-align: center;
-            margin: 2em 0;
-            color: #666;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .error {
-            text-align: center;
-            margin: 2em 0;
-            color: #e74c3c;
-            padding: 10px;
-            background-color: #fde8e8;
-            border-radius: 5px;
-            display: none;
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 600;
         }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
         .update-button {
-            display: block;
-            margin: 2em auto;
-            padding: 10px 20px;
-            background-color: #3498db;
+            background-color: var(--primary-color);
             color: white;
             border: none;
+            padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1.1em;
+            font-size: 1rem;
             transition: background-color 0.3s;
         }
+
         .update-button:hover {
             background-color: #2980b9;
         }
+
         .update-button:disabled {
             background-color: #95a5a6;
             cursor: not-allowed;
         }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
+
+        .last-update {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .events-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .events-table th,
+        .events-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .events-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .events-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .error {
+            text-align: center;
+            padding: 1rem;
+            background-color: #fee;
+            color: #c00;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+
+        .no-events {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+
+            .events-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            h1 {
+                font-size: 2rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">События в Санкт-Петербурге</h1>
-        <div class="text-center mb-4">
-            <button id="updateEvents" class="update-button">Обновить события</button>
-            <p id="lastUpdate" class="mt-2 text-muted">Последнее обновление: <span id="lastUpdateDate">Неизвестно</span></p>
+    <header>
+        <div class="container">
+            <h1>События в Санкт-Петербурге</h1>
         </div>
+    </header>
+
+    <div class="container">
+        <div class="controls">
+            <button id="updateEvents" class="update-button">Обновить события</button>
+            <span class="last-update">Последнее обновление: <span id="lastUpdateDate">Неизвестно</span></span>
+        </div>
+
         <div id="eventsContainer">
-            <table>
+            <table class="events-table">
                 <thead>
                     <tr>
                         <th>Название</th>
@@ -133,26 +170,29 @@
                     </tr>
                 </thead>
                 <tbody id="eventsTableBody">
-                    <!-- События будут добавлены здесь -->
+                    <tr>
+                        <td colspan="4" class="loading">Загрузка событий...</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
     <script>
-        // Функция для обновления событий
         function updateEvents() {
+            const button = document.getElementById('updateEvents');
             const eventsTableBody = document.getElementById('eventsTableBody');
             const lastUpdateDate = document.getElementById('lastUpdateDate');
             
-            // Показываем индикатор загрузки
+            // Отключаем кнопку и показываем загрузку
+            button.disabled = true;
             eventsTableBody.innerHTML = '<tr><td colspan="4" class="loading">Загрузка событий...</td></tr>';
             
             // Запрашиваем события с сервера
             fetch('api/events.php')
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('HTTP error! status: ' + response.status);
+                        throw new Error('Ошибка загрузки данных: ' + response.status);
                     }
                     return response.json();
                 })
@@ -177,12 +217,8 @@
                                 eventsTableBody.appendChild(tr);
                             });
                         } else {
-                            eventsTableBody.innerHTML = '<tr><td colspan="4" class="text-center">События не найдены</td></tr>';
+                            eventsTableBody.innerHTML = '<tr><td colspan="4" class="no-events">События не найдены</td></tr>';
                         }
-                        
-                        // Сохраняем события в localStorage
-                        localStorage.setItem('events', JSON.stringify(data.events));
-                        localStorage.setItem('lastUpdate', data.lastUpdate || 'Неизвестно');
                     } else {
                         throw new Error(data.error || 'Неизвестная ошибка');
                     }
@@ -190,49 +226,17 @@
                 .catch(error => {
                     console.error('Error:', error);
                     eventsTableBody.innerHTML = `<tr><td colspan="4" class="error">Ошибка при загрузке событий: ${error.message}</td></tr>`;
+                })
+                .finally(() => {
+                    // Включаем кнопку обратно
+                    button.disabled = false;
                 });
         }
-        
+
         // Загружаем события при загрузке страницы
-        document.addEventListener('DOMContentLoaded', function() {
-            // Проверяем, есть ли сохраненные события в localStorage
-            const savedEvents = localStorage.getItem('events');
-            const savedLastUpdate = localStorage.getItem('lastUpdate');
-            
-            if (savedEvents) {
-                // Отображаем сохраненные события
-                const events = JSON.parse(savedEvents);
-                const eventsTableBody = document.getElementById('eventsTableBody');
-                const lastUpdateDate = document.getElementById('lastUpdateDate');
-                
-                // Обновляем дату последнего обновления
-                lastUpdateDate.textContent = savedLastUpdate || 'Неизвестно';
-                
-                // Очищаем таблицу
-                eventsTableBody.innerHTML = '';
-                
-                // Добавляем события в таблицу
-                if (events.length > 0) {
-                    events.forEach(event => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${event.name}</td>
-                            <td>${event.date}</td>
-                            <td>${event.category}</td>
-                            <td>${event.description}</td>
-                        `;
-                        eventsTableBody.appendChild(tr);
-                    });
-                } else {
-                    eventsTableBody.innerHTML = '<tr><td colspan="4" class="text-center">События не найдены</td></tr>';
-                }
-            } else {
-                // Если нет сохраненных событий, загружаем их с сервера
-                updateEvents();
-            }
-        });
-        
-        // Обработчик нажатия на кнопку "Обновить события"
+        document.addEventListener('DOMContentLoaded', updateEvents);
+
+        // Добавляем обработчик для кнопки обновления
         document.getElementById('updateEvents').addEventListener('click', updateEvents);
     </script>
 </body>

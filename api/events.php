@@ -11,6 +11,7 @@ ini_set('error_log', __DIR__ . '/error.log');
 // Логируем все запросы
 error_log('Request received: ' . $_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI']);
 
+// Устанавливаем заголовки для JSON и CORS
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST');
@@ -30,12 +31,17 @@ error_log('Debug info: ' . print_r($debug_info, true));
 // Функция для чтения событий из CSV-файла
 function getEventsFromCSV() {
     $csvFile = __DIR__ . '/../data/events.csv';
-    $lastUpdateFile = __DIR__ . '/../data/last_update.txt';
     
     // Проверяем существование файла
     if (!file_exists($csvFile)) {
         error_log('CSV file not found: ' . $csvFile);
-        throw new Exception('Файл с событиями не найден. Пожалуйста, запустите скрипт генерации событий.');
+        throw new Exception('Файл с событиями не найден');
+    }
+    
+    // Проверяем права доступа
+    if (!is_readable($csvFile)) {
+        error_log('CSV file is not readable: ' . $csvFile);
+        throw new Exception('Нет доступа к файлу с событиями');
     }
     
     // Читаем содержимое файла
@@ -57,21 +63,23 @@ function getEventsFromCSV() {
     // Пропускаем заголовок
     $events = [];
     for ($i = 1; $i < count($lines); $i++) {
-        $line = $lines[$i];
+        $line = trim($lines[$i]);
+        if (empty($line)) continue;
+        
         $fields = str_getcsv($line);
         
         if (count($fields) >= 4) {
             $events[] = [
-                'name' => $fields[0],
-                'date' => $fields[1],
-                'category' => $fields[2],
-                'description' => $fields[3]
+                'name' => trim($fields[0]),
+                'date' => trim($fields[1]),
+                'category' => trim($fields[2]),
+                'description' => trim($fields[3])
             ];
         }
     }
     
-    // Получаем дату последнего обновления
-    $lastUpdate = file_exists($lastUpdateFile) ? file_get_contents($lastUpdateFile) : 'Неизвестно';
+    // Получаем дату последнего обновления файла
+    $lastUpdate = date('d.m.Y H:i:s', filemtime($csvFile));
     
     return [
         'events' => $events,
@@ -89,7 +97,7 @@ try {
         'success' => true,
         'events' => $result['events'],
         'lastUpdate' => $result['lastUpdate']
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
     // Логируем ошибку
     error_log('Error in getEventsFromCSV: ' . $e->getMessage());
@@ -98,7 +106,6 @@ try {
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'error' => $e->getMessage(),
-        'debug' => $debug_info
-    ]);
+        'error' => $e->getMessage()
+    ], JSON_UNESCAPED_UNICODE);
 } 
