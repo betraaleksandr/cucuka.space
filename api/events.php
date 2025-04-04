@@ -4,19 +4,28 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+// Добавляем логирование в файл
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/error.log');
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // Получаем API ключ из переменной окружения или файла конфигурации
-$api_key = getenv('OPENAI_API_KEY');
-if (!$api_key) {
-    // Если переменная окружения не установлена, попробуем прочитать из файла
-    $config_file = __DIR__ . '/../config.php';
-    if (file_exists($config_file)) {
-        include $config_file;
+$api_key = null;
+$config_file = __DIR__ . '/../config.php';
+
+if (file_exists($config_file)) {
+    include $config_file;
+    if (isset($OPENAI_API_KEY)) {
+        $api_key = $OPENAI_API_KEY;
     }
+}
+
+if (!$api_key) {
+    $api_key = getenv('OPENAI_API_KEY');
 }
 
 // Отладочная информация
@@ -24,13 +33,22 @@ $debug_info = [
     'config_file_exists' => file_exists($config_file),
     'config_file_path' => $config_file,
     'api_key_set' => !empty($api_key),
-    'api_key_length' => strlen($api_key)
+    'api_key_length' => $api_key ? strlen($api_key) : 0,
+    'php_version' => PHP_VERSION,
+    'server_software' => $_SERVER['SERVER_SOFTWARE'] ?? 'unknown',
+    'request_method' => $_SERVER['REQUEST_METHOD'],
+    'request_uri' => $_SERVER['REQUEST_URI']
 ];
 
+// Логируем отладочную информацию
+error_log('Debug info: ' . print_r($debug_info, true));
+
 if (!$api_key) {
+    $error_message = 'API ключ не настроен';
+    error_log($error_message . '. Debug info: ' . print_r($debug_info, true));
     http_response_code(500);
     echo json_encode([
-        'error' => 'API ключ не настроен',
+        'error' => $error_message,
         'debug' => $debug_info
     ]);
     exit;
