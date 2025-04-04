@@ -114,10 +114,9 @@ function getEventsFromChatGPT($api_key) {
         return $csvText;
     } catch (Exception $e) {
         error_log('Exception in getEventsFromChatGPT: ' . $e->getMessage());
-        throw $e;
-    } finally {
         // Закрываем cURL сессию
         curl_close($ch);
+        throw $e;
     }
 }
 
