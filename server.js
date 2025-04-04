@@ -33,6 +33,11 @@ app.use(express.json());
 // Раздача статических файлов
 app.use(express.static(path.join(__dirname)));
 
+// Маршрут для страницы событий
+app.get('/events', (req, res) => {
+  res.sendFile(path.join(__dirname, 'events.html'));
+});
+
 // API endpoint для получения событий
 app.get('/api/events', (req, res) => {
   db.all('SELECT * FROM events ORDER BY date ASC', (err, rows) => {
