@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>4Partners — Инвестиции в международный e-commerce</title>
+  <meta name="description" content="15% фикс в EUR или до 28% годовых при участии в марже. Короткие 4-месячные циклы, прозрачная отчётность, юрисдикции ЕС и ОАЭ." />
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800&family=Geologica:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --yellow:#FFEB5A;
+      --amber:#FFC631;
+      --green:#90FF55;
+      --green-2:#B5FF44;
+      --pink:#F21C69;
+      --ink:#222222;
+      --bg:#111; /* для контраста на hero */
+      --radius:20px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;scroll-behavior:smooth;background:#fff;color:var(--ink)}
+    body{
+      margin:0;
+      font-family:Geologica,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      line-height:1.35;
+      overflow-x:hidden;
+      /* Верт. слайды */
+      scroll-snap-type:y mandatory;
+    }
+    section{
+      min-height:100svh;
+      padding:clamp(16px,4vw,24px);
+      display:flex;flex-direction:column;justify-content:center;gap:16px;
+      scroll-snap-align:start;
+    }
+    .container{max-width:820px;margin:0 auto}
+    h1,h2{font-family:Unbounded,system-ui,sans-serif;margin:0 0 8px}
+    h1{font-size:clamp(28px,7vw,40px);line-height:1.05;letter-spacing:-.02em}
+    h2{font-size:clamp(22px,6vw,30px);line-height:1.1}
+    p{margin:0;opacity:.9}
+    .lead{font-size:clamp(16px,4.5vw,18px)}
+    .hero{
+      background: radial-gradient(120% 140% at 80% 10%, rgba(178,122,0,.25), transparent 60%),
+                  linear-gradient(180deg, #2b2b2b 0%, #1a1a1a 100%);
+      color:#fff;
+    }
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+      background:var(--yellow);color:#000;font-weight:700;font-size:12px}
+    .tag{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
+      background:#fff;border:1px solid #00000010;font-weight:600;font-size:12px}
+    .cta{
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      padding:14px 18px;border-radius:14px;
+      background:linear-gradient(135deg,var(--amber),var(--yellow));
+      color:#000;font-weight:800;text-decoration:none;
+      box-shadow:0 8px 20px rgba(255,198,49,.35);
+    }
+    .cta.secondary{background:linear-gradient(135deg,var(--green-2),var(--green));box-shadow:0 8px 20px rgba(144,255,85,.35)}
+    .row{display:grid;gap:10px}
+    .grid-2{grid-template-columns:1fr 1fr}
+    .card{
+      border-radius:var(--radius);
+      border:1px solid #00000010;
+      background:#fff;
+      box-shadow:0 8px 30px rgba(0,0,0,.04);
+      padding:16px;
+    }
+    .kpi{display:flex;align-items:flex-end;gap:8px}
+    .kpi .num{font-family:Unbounded;font-weight:800;font-size:clamp(28px,8vw,40px)}
+    .kpi .note{opacity:.7;font-size:12px}
+    .list>li{margin:8px 0}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .pill{padding:8px 12px;border-radius:999px;background:#f7f7f7;border:1px solid #0000000d;font-weight:600;font-size:13px}
+    /* SVG график контейнер */
+    .chart{background:#fff;border:1px solid #00000012;border-radius:var(--radius);padding:12px}
+    .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+    .legend span{display:inline-flex;align-items:center;gap:6px;font-size:12px}
+    .legend b{display:inline-block;width:14px;height:14px;border-radius:4px}
+    /* Sticky CTA снизу */
+    .sticky-cta{
+      position:fixed;inset:auto 12px 12px 12px;z-index:40;
+      display:flex;gap:8px
+    }
+    .s-ghost{height:28px}
+    /* малые декоративные акценты */
+    .accent{background:linear-gradient(90deg,var(--yellow),transparent);height:6px;border-radius:6px}
+    /* Адаптивные правки */
+    @media (min-width:768px){
+      .row{gap:16px}
+      .grid-2{grid-template-columns:1.2fr .8fr}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <span class="badge">4Partners • Инвестиционное предложение</span>
+      <h1>15% фикс в EUR<br/>или до 28% годовых — каждый цикл 4&nbsp;месяца</h1>
+      <p class="lead">Доходность в 4–10 раз выше банковских ставок по евро. Прозрачные процессы: закупка → доставка → реализация → возврат средств.</p>
+      <div class="chips" style="margin-top:10px">
+        <span class="tag">EUR выплаты каждые 4 мес.</span>
+        <span class="tag">Юрисдикции ЕС и ОАЭ</span>
+        <span class="tag">0% просрочек за 2 года</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:18px">
+        <a class="cta" href="#apply">Инвестировать</a>
+        <a class="cta secondary" href="#deck">Скачать презентацию (PDF)</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- СЛАЙД 2: График ставок -->
+  <section id="rates">
+    <div class="container">
+      <h2>Ставки по депозитам в евро — мир vs 4Partners</h2>
+      <p class="lead">Наше предложение заметно выше средних ставок по EUR-депозитам в развитых странах.</p>
+      <div class="chart">
+        <!-- Векторный график (легкий SVG, адаптируется по ширине) -->
+        <svg viewBox="0 0 360 240" width="100%" height="auto" aria-label="Сравнение ставок, % годовых">
+          <!-- ось -->
+          <line x1="80" y1="20" x2="80" y2="220" stroke="#ddd"/>
+          <line x1="80" y1="220" x2="340" y2="220" stroke="#ddd"/>
+          <!-- helper: функция ширины в процентах (0..28%) -> px: 80..340 -->
+          <!-- ряды -->
+          <g font-size="10" font-family="Geologica">
+            <!-- Еврозона ср -->
+            <text x="10" y="40">Еврозона (сред.)</text>
+            <rect x="80" y="30" width=" (1.9/28*260) " height="12" fill="#FFC631"></rect>
+            <text x=" (80 + (1.9/28*260) + 4) " y="40" dominant-baseline="middle">1.9%</text>
+            <!-- Еврозона макс -->
+            <text x="10" y="60">Еврозона (макс.)</text>
+            <rect x="80" y="50" width=" (4.0/28*260) " height="12" fill="#FFC631"></rect>
+            <text x=" (80 + (4.0/28*260) + 4) " y="60" dominant-baseline="middle">4.0%</text>
+            <!-- ОАЭ -->
+            <text x="10" y="80">ОАЭ (ADCB)</text>
+            <rect x="80" y="70" width=" (4.05/28*260) " height="12" fill="#FFC631"></rect>
+            <text x=" (80 + (4.05/28*260) + 4) " y="80" dominant-baseline="middle">4.05%</text>
+            <!-- США -->
+            <text x="10" y="100">США (EUR деп.)</text>
+            <rect x="80" y="90" width=" (0.1/28*260) " height="12" fill="#FFC631"></rect>
+            <text x=" (80 + (0.1/28*260) + 4) " y="100" dominant-baseline="middle">0.1%</text>
+            <!-- Китай -->
+            <text x="10" y="120">Китай</text>
+            <rect x="80" y="110" width=" (0/28*260) " height="12" fill="#FFC631"></rect>
+            <text x=" (80 + (0.01/28*260) + 4) " y="120" dominant-baseline="middle">0%</text>
+            <!-- Сингапур -->
+            <text x="10" y="140">Сингапур (HSBC)</text>
+            <rect x="80" y="130" width=" (0.1/28*260) " height="12" fill="#FFC631"></rect>
+            <text x=" (80 + (0.1/28*260) + 4) " y="140" dominant-baseline="middle">0.1%</text>
+            <!-- Россия -->
+            <text x="10" y="160">Россия (EUR деп.)</text>
+            <rect x="80" y="150" width=" (0/28*260) " height="12" fill="#FFC631"></rect>
+            <text x=" (80 + (0.01/28*260) + 4) " y="160" dominant-baseline="middle">0%</text>
+            <!-- 4P фикс -->
+            <text x="10" y="185" font-weight="700">4Partners (фикс)</text>
+            <rect x="80" y="175" width=" (15/28*260) " height="14" fill="#90FF55" rx="4"></rect>
+            <text x=" (80 + (15/28*260) + 4) " y="185" dominant-baseline="middle" font-weight="700">15%</text>
+            <!-- 4P маржа -->
+            <text x="10" y="205" font-weight="700">4Partners (маржа)</text>
+            <rect x="80" y="195" width=" (28/28*260) " height="14" fill="#B5FF44" rx="4"></rect>
+            <text x=" (80 + (28/28*260) + 4) " y="205" dominant-baseline="middle" font-weight="700">до 28%</text>
+          </g>
+        </svg>
+        <div class="legend">
+          <span><b style="background:#FFC631"></b>Мировые ставки по EUR</span>
+          <span><b style="background:#90FF55"></b>4Partners фикс 15%</span>
+          <span><b style="background:#B5FF44"></b>4Partners маржа до 28%</span>
+        </div>
+      </div>
+      <div class="accent"></div>
+      <p class="lead">Выше мировых ставок в <b>4–10 раз</b>. Выплаты — каждые 4 месяца.</p>
+    </div>
+  </section>
+
+  <!-- СЛАЙД 3: Наше предложение -->
+  <section>
+    <div class="container">
+      <h2>Наше предложение vs мировой рынок</h2>
+      <div class="row">
+        <div class="card">
+          <h3 style="margin:0 0 6px;font-family:Unbounded">15% фикс в EUR</h3>
+          <ul class="list">
+            <li>Выплата каждые 4 месяца</li>
+            <li>Капитал не замораживается на годы</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="margin:0 0 6px;font-family:Unbounded">Доля в маржинальности</h3>
+          <ul class="list">
+            <li>Потенциал доходности: <b>8–28% годовых</b></li>
+            <li>Деление прибыли 50/50</li>
+          </ul>
+        </div>
+      </div>
+      <p class="lead">Краткосрочные вложения, высокая оборачиваемость.</p>
+    </div>
+  </section>
+
+  <!-- СЛАЙД 4: Цикл 4 месяца -->
+  <section>
+    <div class="container">
+      <h2>Цикл оборачиваемости инвестиций — 4 месяца</h2>
+      <div class="row">
+        <div class="card"><b>1) Заказ → закупка (~30 дн.)</b><br/>оформление и согласование, заказ поставщику</div>
+        <div class="card"><b>2) Склад (~30 дн.)</b><br/>закупка, обработка, хранение</div>
+        <div class="card"><b>3) Доставка (~30 дн.)</b><br/>международная логистика до клиента</div>
+        <div class="card"><b>4) Расчёты (~30 дн.)</b><br/>поступление средств, отчёт инвестору</div>
+      </div>
+      <p class="lead">Каждые 4 месяца — выплата дохода и выбор: забрать капитал или реинвестировать.</p>
+    </div>
+  </section>
+
+  <!-- СЛАЙД 5: Структура инвестиций -->
+  <section>
+    <div class="container">
+      <h2>Структура инвестиций</h2>
+      <div class="kpi"><span class="num">€500&nbsp;000</span><span class="note">привлекаемая сумма</span></div>
+      <div class="row">
+        <div class="card">
+          <b>Фиксированный доход</b><br/>15% годовых в EUR • Выплата каждые 4 месяца
+        </div>
+        <div class="card">
+          <b>Доля в маржинальности</b><br/>Средняя маржа 35–40% • Для инвестора 8–28% годовых
+        </div>
+      </div>
+      <div class="chips">
+        <span class="pill">Закупка товаров</span>
+        <span class="pill">Склад и логистика</span>
+        <span class="pill">Международная доставка</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- СЛАЙД 6: Почему выгодно -->
+  <section>
+    <div class="container">
+      <h2>Почему выгодно инвестировать у нас</h2>
+      <ul class="list">
+        <li><b>Высокая доходность:</b> 15% фикс или 17,5–20%+ при участии в марже</li>
+        <li><b>Короткий цикл:</b> выплаты каждые 4 месяца</li>
+        <li><b>Гибкость:</b> после каждого цикла — вывод капитала или реинвест</li>
+        <li><b>Прозрачность:</b> закупка → доставка → реализация → возврат средств</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- СЛАЙД 7: Доп. показатели -->
+  <section>
+    <div class="container">
+      <h2>Дополнительные показатели для инвестора</h2>
+      <div class="row">
+        <div class="card"><b>Историческая доходность:</b> 23,2% годовых</div>
+        <div class="card"><b>Оборот за год:</b> с 0 → €1,2 млн</div>
+        <div class="card"><b>Просрочки:</b> 0% за 2 года</div>
+        <div class="card"><b>Собственные вложения команды:</b> €150 000</div>
+        <div class="card"><b>Поставщики/страны:</b> ___ / ___ (диверсификация)</div>
+        <div class="card"><b>Оборачиваемость:</b> ____ дней</div>
+        <div class="card"><b>Выплаты от маркетплейсов:</b> 90% за 15 р.д.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- СЛАЙД 8: Юридические гарантии -->
+  <section>
+    <div class="container">
+      <h2>Юридическая защита и гарантии</h2>
+      <ul class="list">
+        <li>Договор инвестирования: фиксированная доходность или доля в прибыли</li>
+        <li>Прозрачная отчётность после каждого цикла</li>
+        <li>Компании зарегистрированы в ЕС и ОАЭ</li>
+        <li>Гибкий выход: после любого 4-месячного цикла</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- СЛАЙД 9: CTA -->
+  <section id="apply">
+    <div class="container">
+      <h2>Готовы обсудить сделку?</h2>
+      <p class="lead">Оставьте контакты — пришлём условия и пример договора.</p>
+      <form class="card" onsubmit="event.preventDefault(); alert('Спасибо! Мы свяжемся с вами.');">
+        <label>Имя<br/><input required name="name" placeholder="Иван" style="width:100%;padding:12px;border-radius:12px;border:1px solid #00000020;margin-top:6px"/></label>
+        <div style="height:10px"></div>
+        <label>Email<br/><input required type="email" name="email" placeholder="name@example.com" style="width:100%;padding:12px;border-radius:12px;border:1px solid #00000020;margin-top:6px"/></label>
+        <div style="height:10px"></div>
+        <label>Сумма инвестиций (€)<br/><input name="sum" placeholder="50000" style="width:100%;padding:12px;border-radius:12px;border:1px solid #00000020;margin-top:6px"/></label>
+        <div style="height:14px"></div>
+        <button class="cta" type="submit">Отправить заявку</button>
+      </form>
+      <div class="chips" style="margin-top:12px">
+        <a class="tag" href="https://4partners.io" target="_blank" rel="noopener">https://4partners.io</a>
+        <a class="tag" href="mailto:invest@4partners.io">invest@4partners.io</a>
+        <a class="tag" href="tel:+971000000000">+971 00 000 0000</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sticky CTA -->
+  <div class="sticky-cta">
+    <a class="cta" href="#apply">Инвестировать</a>
+    <a class="cta secondary" href="https://wa.me/0000000000" target="_blank" rel="noopener">WhatsApp</a>
+  </div>
+  <div class="s-ghost"></div>
+
+  <script>
+    // Небольшая правка: подмена SVG выражений на реальные ширины (расчёт в JS для кросс-браузерности)
+    (function(){
+      const svg = document.querySelector('svg');
+      if(!svg) return;
+      const max = 28, base=80, span=260;
+      const setWidth = (q, v) => {
+        const el = svg.querySelector(q);
+        if(el) el.setAttribute('width', (v/max*span).toFixed(2));
+      };
+      const setTextX = (q, v) => {
+        const el = svg.querySelector(q);
+        if(el) el.setAttribute('x', (base + (v/max*span) + 4).toFixed(2));
+      };
+      const pairs = [
+        ['rect[y="30"]',1.9,'text[y="40"]'],
+        ['rect[y="50"]',4.0,'text[y="60"]'],
+        ['rect[y="70"]',4.05,'text[y="80"]'],
+        ['rect[y="90"]',0.1,'text[y="100"]'],
+        ['rect[y="110"]',0.0,'text[y="120"]'],
+        ['rect[y="130"]',0.1,'text[y="140"]'],
+        ['rect[y="150"]',0.0,'text[y="160"]'],
+        ['rect[y="175"]',15,'text[y="185"]'],
+        ['rect[y="195"]',28,'text[y="205"]'],
+      ];
+      pairs.forEach(([rq,v,tq])=>{ setWidth(rq,v); setTextX(tq,v); });
+    })();
+  </script>
+</body>
+</html>
