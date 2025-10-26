@@ -82,6 +82,9 @@
     .list li + li{margin-top:var(--space-8)}
     .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:var(--space-12)}
     .pill{padding:8px 12px;border-radius:999px;background:#f7f7f7;border:1px solid #0000000d;font-weight:600;font-size:13px}
+    /* Логотипы партнеров */
+    .chips img{filter:brightness(0) invert(1);opacity:.8;transition:opacity .2s}
+    .chips img:hover{opacity:1}
     /* SVG график контейнер */
     .chart{background:#fff;border:1px solid #00000012;border-radius:var(--radius);padding:12px}
     .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
@@ -109,13 +112,13 @@
   <!-- HERO -->
   <section class="hero">
     <div class="container measure">
-      <span class="badge">4Partners • Инвестиционное предложение</span>
-      <h1>4Partners. Инвестируйте в cross border e-com</h1>
-      <p class="lead">Доходность в 4–10 раз выше банковских ставок по евро.<br/>Прозрачные процессы: закупка → доставка → реализация → возврат средств.</p>
-      <div class="chips">
-        <span class="tag">EUR выплаты каждые 4 мес.</span>
-        <span class="tag">Юрисдикции ЕС и ОАЭ</span>
-        <span class="tag">0&nbsp;% просрочек за 2 года</span>
+      <img src="https://static.tildacdn.com/tild3965-6638-4463-b866-656164343762/4partners.svg" alt="4Partners" style="height: 60px; margin-bottom: 24px;">
+      <h1>Инвестиции в оборотный капитал Топ-1 кроссбордер-поставщика в России</h1>
+      <p class="lead">Работаем с крупнейшими маркетплейсами:</p>
+      <div class="chips" style="margin-top: 16px;">
+        <img src="https://cdn1.ozone.ru/s3/sigma-static/ozon-logo.png" alt="Ozon" style="height: 32px;">
+        <img src="https://www.letu.ru/common/img/logo/letu-logo.svg" alt="Л'Этуаль" style="height: 32px;">
+        <img src="https://www.sportmaster.ru/media/main-logo.svg" alt="Спортмастер" style="height: 32px;">
       </div>
     </div>
   </section>
