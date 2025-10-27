@@ -1,348 +1,932 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>4Partners — Инвестиции в международный e-commerce</title>
-  <meta name="description" content="16% фикс в EUR или до 28% годовых при участии в марже. Короткие 4-месячные циклы, прозрачная отчётность, юрисдикции ЕС и ОАЭ." />
-  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800&family=Geologica:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>4Partners — инвестиции в международный e-commerce</title>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700&family=Geologica:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --yellow:#FFEB5A;
-      --amber:#FFC631;
-      --green:#90FF55;
-      --green-2:#B5FF44;
-      --pink:#F21C69;
-      --ink:#222222;
-      --bg:#111; /* для контраста на hero */
-      --radius:20px;
-      /* шкала отступов */
-      --space-4:4px; --space-8:8px; --space-12:12px; --space-16:16px; --space-24:24px; --space-32:32px; --space-48:48px; --space-64:64px; --space-96:96px;
+    :root {
+      --yellow: #FFEB5A;
+      --amber: #FFC631;
+      --green: #90FF55;
+      --green2: #B5FF44;
+      --pink: #F21C69;
+      --ink: #222222;
+      --bg: #FFFFFF;
+      --gray: #F9F9F9;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%;scroll-behavior:smooth;background:#fff;color:var(--ink)}
-    body{
-      margin:0;
-      font-family:Geologica,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      line-height:1.55;
-      overflow-x:hidden;
-      /* Верт. слайды */
-      scroll-snap-type:y mandatory;
-    }
-    section{
-      min-height:100svh;
-      padding:clamp(16px,4vw,24px);
-      display:flex;flex-direction:column;justify-content:center;gap:var(--space-16);
-      scroll-snap-align:start;
-      background:#fff;
-    }
-    section:nth-of-type(odd):not(.hero){background:#f7f7f7;}
 
-    .container{max-width:820px;margin:0 auto}
-    .measure{max-width:68ch}
-    h1,h2{font-family:Unbounded,system-ui,sans-serif;margin:0 0 8px}
-    h1{font-size:clamp(28px,7vw,40px);line-height:1.08;letter-spacing:-.01em}
-    h2{font-size:clamp(22px,6vw,30px);line-height:1.2}
-    p{margin:0;opacity:.9}
-    .lead{font-size:clamp(16px,4.5vw,18px);line-height:1.4}
-    h1 + .lead{margin-top:var(--space-12)}
-    .hero{
-      background: radial-gradient(120% 140% at 80% 10%, rgba(178,122,0,.25), transparent 60%),
-                  linear-gradient(180deg, #2b2b2b 0%, #1a1a1a 100%);
-      color:#fff;
+    body {
+      margin: 0;
+      font-family: "Geologica", sans-serif;
+      background-color: var(--bg);
+      color: var(--ink);
+      text-align: left; /* ВАЖНО — все тексты по левому краю */
     }
-    .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
-      background:var(--yellow);color:#000;font-weight:700;font-size:12px}
-    .tag{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
-      background:#fff;border:1px solid #00000010;font-weight:600;font-size:12px}
-    /* Видимость тегов на тёмном герое */
-    .hero .tag{background:var(--amber);color:#000;border-color:transparent}
-    .cta{
-      display:inline-flex;align-items:center;justify-content:center;gap:10px;
-      padding:12px 18px;border-radius:14px;min-height:44px;
-      background:linear-gradient(135deg,var(--amber),var(--yellow));
-      color:#000;font-weight:800;text-decoration:none;
-      box-shadow:0 8px 20px rgba(255,198,49,.35);
+
+    .slide {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px 16px;
+      font-family: "Geologica", sans-serif;
+      background-color: var(--bg);
+      text-align: left; /* дополнительное выравнивание */
     }
-    .cta:focus-visible{outline:2px solid #000;outline-offset:2px}
-    .cta.secondary{background:linear-gradient(135deg,var(--green-2),var(--green));box-shadow:0 8px 20px rgba(144,255,85,.35)}
-    .row{display:grid;gap:var(--space-12)}
-    .grid-2{grid-template-columns:1fr 1fr}
-    .card{
-      border-radius:var(--radius);
-      border:1px solid #00000010;
-      background:#fff;
-      box-shadow:0 8px 30px rgba(0,0,0,.04);
-      padding:16px;
+
+    .slide:nth-child(even) {
+      background-color: var(--gray);
     }
-    .kpi{display:flex;align-items:flex-end;gap:8px}
-    .kpi .num{font-family:Unbounded;font-weight:800;font-size:clamp(28px,8vw,40px)}
-    .kpi .note{opacity:.7;font-size:12px}
-    .list{padding-left:1.2em}
-    .list li + li{margin-top:var(--space-8)}
-    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:var(--space-12)}
-    .pill{padding:8px 12px;border-radius:999px;background:#f7f7f7;border:1px solid #0000000d;font-weight:600;font-size:13px}
-    /* Логотипы партнеров */
-    .chips img{filter:brightness(0) invert(1);opacity:.8;transition:opacity .2s}
-    .chips img:hover{opacity:1}
-    /* SVG график контейнер */
-    .chart{background:#fff;border:1px solid #00000012;border-radius:var(--radius);padding:12px}
-    .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
-    .legend span{display:inline-flex;align-items:center;gap:6px;font-size:12px}
-    .legend b{display:inline-block;width:14px;height:14px;border-radius:4px}
-    /* Sticky CTA удалён */
-    /* малые декоративные акценты */
-    .accent{background:linear-gradient(90deg,var(--yellow),transparent);height:6px;border-radius:6px}
-    /* Формы */
-    form.card{padding:20px}
-    form.card label{display:block;font-weight:600}
-    form.card label + label{margin-top:var(--space-12)}
-    form.card input{width:100%;padding:12px;border-radius:12px;border:1px solid #00000020;margin-top:var(--space-8)}
-    form.card .actions{margin-top:var(--space-24)}
-    /* Адаптивные правки */
-    @media (min-width:768px){
-      .row{gap:var(--space-16)}
-      .grid-2{grid-template-columns:1.2fr .8fr}
-      .card{padding:20px}
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      text-align: left; /* выравнивание контента внутри секций */
     }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      min-height: 100vh;
+      background-color: var(--bg);
+      color: var(--ink);
+      padding: 48px 16px;
+    }
+
+    .hero__logo {
+      height: 60px;
+      margin-bottom: 24px;
+    }
+
+    .hero__title {
+      font-family: "Unbounded", sans-serif;
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 1.3;
+      max-width: 680px;
+      margin: 0 auto 16px;
+    }
+
+    .hero__lead {
+      font-family: "Geologica", sans-serif;
+      font-size: 16px;
+      color: var(--ink);
+      margin-bottom: 0;
+    }
+
+    .hero__logos {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 16px;
+      margin-top: 8px;
+      height: 32px;
+    }
+
+    .hero__logos img {
+      height: 24px;
+    }
+
+    @media (min-width: 768px) {
+      .hero__title {
+        font-size: 32px;
+      }
+    }
+
+    .offer {
+      text-align: center;
+      padding: 64px 16px;
+    }
+
+    .offer__title {
+      font-family: "Unbounded", sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .offer__subtitle {
+      font-family: "Geologica", sans-serif;
+      font-size: 16px;
+      color: var(--ink);
+      margin-bottom: 32px;
+    }
+
+    .offer__cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .offer-card {
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      text-align: left;
+    }
+
+    .offer-card h3 {
+      font-family: "Unbounded", sans-serif;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .offer-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .offer-card li {
+      font-family: "Geologica", sans-serif;
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .offer__terms ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 auto 32px;
+      max-width: 400px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .offer__note {
+      background: linear-gradient(135deg, var(--amber), var(--yellow));
+      border-radius: 16px;
+      padding: 16px;
+      font-family: "Geologica", sans-serif;
+      font-weight: 500;
+      color: var(--ink);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 768px) {
+      .offer__cards {
+        flex-direction: row;
+        justify-content: center;
+      }
+      .offer-card {
+        flex: 1;
+        max-width: 360px;
+      }
+    }
+
+    .trade-flow {
+      padding: 64px 16px;
+    }
+
+    .trade-flow__title {
+      font-family: "Unbounded", sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--ink);
+    }
+
+    .trade-flow__text {
+      font-family: "Geologica", sans-serif;
+      font-size: 16px;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+
+    .trade-flow__subtitle {
+      font-family: "Unbounded", sans-serif;
+      font-size: 18px;
+      margin: 24px 0 12px;
+    }
+
+    .trade-flow__list {
+      font-family: "Geologica", sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      margin: 0 0 16px;
+      padding-left: 20px;
+    }
+
+    .trade-flow__diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin: 32px 0;
+    }
+
+    .trade-flow__block {
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 16px;
+      padding: 16px;
+      width: 160px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .trade-flow__icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .trade-flow__label {
+      font-family: "Geologica", sans-serif;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .trade-flow__price {
+      font-size: 15px;
+      color: #555;
+      margin: 0;
+    }
+
+    .trade-flow__arrow {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--pink);
+    }
+
+    .trade-flow__logos {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .trade-flow__logos img {
+      height: 24px;
+    }
+
+    .trade-flow__caption {
+      font-family: "Geologica", sans-serif;
+      font-size: 15px;
+      color: #444;
+      max-width: 480px;
+    }
+
+    @media (min-width: 768px) {
+      .trade-flow__logos {
+        flex-direction: row;
+        gap: 16px;
+      }
+    }
+
+    .business {
+      padding: 64px 16px;
+    }
+
+    .business__title {
+      font-family: "Unbounded", sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--ink);
+    }
+
+    .business__subtitle {
+      font-family: "Unbounded", sans-serif;
+      font-size: 18px;
+      margin: 32px 0 12px;
+      color: var(--ink);
+    }
+
+    .business__list {
+      font-family: "Geologica", sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      margin: 0 0 16px;
+      padding-left: 20px;
+    }
+
+    .model {
+      padding: 64px 16px;
+    }
+
+    .model__title {
+      font-family: "Unbounded", sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--ink);
+    }
+
+    .model__intro {
+      font-family: "Geologica", sans-serif;
+      font-size: 16px;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+
+    .model__subtitle {
+      font-family: "Unbounded", sans-serif;
+      font-size: 18px;
+      margin: 24px 0 12px;
+      color: var(--ink);
+    }
+
+    .model__steps {
+      list-style: none;
+      counter-reset: step;
+      padding: 0;
+      margin: 0 0 24px;
+    }
+
+    .model__steps li {
+      font-family: "Geologica", sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      position: relative;
+      padding-left: 32px;
+    }
+
+    .model__steps li::before {
+      counter-increment: step;
+      content: counter(step) ".";
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-weight: 700;
+      color: var(--pink);
+    }
+
+    .model__summary {
+      font-family: "Geologica", sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      margin: 16px 0 32px;
+    }
+
+    .model__list {
+      font-family: "Geologica", sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      margin: 0 0 16px;
+      padding-left: 20px;
+    }
+
+    .model__note {
+      background: linear-gradient(135deg, var(--amber), var(--yellow));
+      border-radius: 16px;
+      padding: 16px;
+      font-family: "Geologica", sans-serif;
+      font-weight: 500;
+      color: var(--ink);
+      margin-top: 32px;
+      max-width: 520px;
+    }
+
+    .structure {
+      padding: 64px 16px;
+    }
+
+    .structure__title {
+      font-family: "Unbounded", sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+
+    .structure__sum {
+      font-family: "Geologica", sans-serif;
+      font-size: 16px;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+
+    .structure__subtitle {
+      font-family: "Unbounded", sans-serif;
+      font-size: 18px;
+      margin: 32px 0 16px;
+      color: var(--ink);
+    }
+
+    .structure__formats {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .structure__block {
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .structure__block h4 {
+      font-family: "Unbounded", sans-serif;
+      font-size: 16px;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+
+    .structure__block ul {
+      font-family: "Geologica", sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      padding-left: 20px;
+      margin: 0;
+    }
+
+    .structure__usage {
+      list-style: none;
+      counter-reset: step;
+      padding: 0;
+      margin: 0;
+    }
+
+    .structure__usage li {
+      font-family: "Geologica", sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      position: relative;
+      padding-left: 32px;
+    }
+
+    .structure__usage li::before {
+      counter-increment: step;
+      content: counter(step) ".";
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .advantages {
+      padding: 64px 16px;
+    }
+
+    .advantages__title {
+      font-family: "Unbounded", sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 32px;
+      color: var(--ink);
+    }
+
+    .advantages__group {
+      margin-bottom: 32px;
+    }
+
+    .advantages__group h3 {
+      font-family: "Unbounded", sans-serif;
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+
+    .advantages__group ul {
+      font-family: "Geologica", sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--ink);
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .metrics {
+      padding: 64px 16px;
+    }
+
+    .metrics__title {
+      font-family: "Unbounded", sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+
+    .metrics__grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .metrics__card {
+      background: #fff;
+      border: 1px solid #e9e9e9;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .metrics__card h3 {
+      font-family: "Unbounded", sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0 0 10px;
+    }
+
+    .metrics__card ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      font-family: "Geologica", sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--ink);
+    }
+
+    .metrics__card li + li {
+      margin-top: 8px;
+    }
+
+    @media (min-width: 768px) {
+      .metrics__grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+    }
+
+    .legal {
+      padding: 64px 16px;
+    }
+
+    .legal__title {
+      font-family: "Unbounded", sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 32px;
+    }
+
+    .legal__block {
+      margin-bottom: 40px;
+    }
+
+    .legal__block h3 {
+      font-family: "Unbounded", sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 12px;
+    }
+
+    .legal__list {
+      list-style-type: disc;
+      padding-left: 20px;
+      font-family: "Geologica", sans-serif;
+      font-size: 15px;
+      line-height: 1.8;
+      color: #222;
+    }
+
+    .legal__list li {
+      margin-bottom: 10px;
+    }
+
+    .legal__list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .contacts {
+      padding: 64px 16px;
+      background-color: #f7f7f7;
+    }
+
+    .contacts__title {
+      font-family: "Unbounded", sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 32px;
+    }
+
+    .contacts__info {
+      font-family: "Geologica", sans-serif;
+      font-size: 15px;
+      line-height: 1.8;
+      color: #222;
+    }
+
+    .contacts__info p {
+      margin-bottom: 16px;
+    }
+
+    .contacts__info a {
+      color: #222;
+      text-decoration: none;
+      border-bottom: 1px solid #222;
+      transition: 0.2s ease;
+    }
+
+    .contacts__info a:hover {
+      color: #000;
+      border-bottom-color: #000;
+    }
+
   </style>
 </head>
 <body>
-
-  <!-- HERO -->
+  <main>
   <section class="hero">
     <div class="container measure">
-      <img src="https://static.tildacdn.com/tild3965-6638-4463-b866-656164343762/4partners.svg" alt="4Partners" style="height: 60px; margin-bottom: 24px;">
-      <h1>Инвестиции в оборотный капитал Топ-1 кроссбордер-поставщика в России</h1>
-      <p class="lead">Работаем с крупнейшими маркетплейсами:</p>
-      <div class="chips" style="margin-top: 16px;">
-        <img src="https://cdn1.ozone.ru/s3/sigma-static/ozon-logo.png" alt="Ozon" style="height: 32px;">
-        <img src="https://www.letu.ru/common/img/logo/letu-logo.svg" alt="Л'Этуаль" style="height: 32px;">
-        <img src="https://www.sportmaster.ru/media/main-logo.svg" alt="Спортмастер" style="height: 32px;">
-      </div>
-    </div>
-  </section>
-
-  <!-- СЛАЙД 2: График ставок -->
-  <section id="rates" style="background: #f8f9fa;">
-    <div class="container">
-      <h2>Ставки по депозитам в евро — мир vs 4Partners</h2>
-      <p class="lead">Наше предложение заметно выше средних ставок по EUR-депозитам в развитых странах.</p>
-      <div class="chart">
-        <!-- Векторный график (легкий SVG, адаптируется по ширине) -->
-        <svg viewBox="0 0 360 240" width="100%" height="auto" aria-label="Сравнение ставок, % годовых">
-          <!-- ось -->
-          <line x1="80" y1="20" x2="80" y2="220" stroke="#ddd"/>
-          <line x1="80" y1="220" x2="340" y2="220" stroke="#ddd"/>
-          <!-- helper: функция ширины в процентах (0..28%) -> px: 80..340 -->
-          <!-- ряды -->
-          <g font-size="10" font-family="Geologica">
-            <!-- Еврозона ср -->
-            <text x="10" y="40">Еврозона (сред.)</text>
-            <rect x="80" y="30" width=" (1.9/28*260) " height="12" fill="#FFC631"></rect>
-            <text x=" (80 + (1.9/28*260) + 4) " y="40" dominant-baseline="middle">1.9%</text>
-            <!-- Еврозона макс -->
-            <text x="10" y="60">Еврозона (макс.)</text>
-            <rect x="80" y="50" width=" (4.0/28*260) " height="12" fill="#FFC631"></rect>
-            <text x=" (80 + (4.0/28*260) + 4) " y="60" dominant-baseline="middle">4.0%</text>
-            <!-- ОАЭ -->
-            <text x="10" y="80">ОАЭ (ADCB)</text>
-            <rect x="80" y="70" width=" (4.05/28*260) " height="12" fill="#FFC631"></rect>
-            <text x=" (80 + (4.05/28*260) + 4) " y="80" dominant-baseline="middle">4.05%</text>
-            <!-- США -->
-            <text x="10" y="100">США (EUR деп.)</text>
-            <rect x="80" y="90" width=" (0.1/28*260) " height="12" fill="#FFC631"></rect>
-            <text x=" (80 + (0.1/28*260) + 4) " y="100" dominant-baseline="middle">0.1%</text>
-            <!-- Китай -->
-            <text x="10" y="120">Китай</text>
-            <rect x="80" y="110" width=" (0/28*260) " height="12" fill="#FFC631"></rect>
-            <text x=" (80 + (0.01/28*260) + 4) " y="120" dominant-baseline="middle">0%</text>
-            <!-- Сингапур -->
-            <text x="10" y="140">Сингапур (HSBC)</text>
-            <rect x="80" y="130" width=" (0.1/28*260) " height="12" fill="#FFC631"></rect>
-            <text x=" (80 + (0.1/28*260) + 4) " y="140" dominant-baseline="middle">0.1%</text>
-            <!-- Россия -->
-            <text x="10" y="160">Россия (EUR деп.)</text>
-            <rect x="80" y="150" width=" (0/28*260) " height="12" fill="#FFC631"></rect>
-            <text x=" (80 + (0.01/28*260) + 4) " y="160" dominant-baseline="middle">0%</text>
-            <!-- 4P фикс -->
-            <text x="10" y="185" font-weight="700">4Partners (фикс)</text>
-            <rect x="80" y="175" width=" (16/28*260) " height="14" fill="#90FF55" rx="4"></rect>
-            <text x=" (80 + (16/28*260) + 4) " y="185" dominant-baseline="middle" font-weight="700">16%</text>
-            <!-- 4P маржа -->
-            <text x="10" y="205" font-weight="700">4Partners (маржа)</text>
-            <rect x="80" y="195" width=" (28/28*260) " height="14" fill="#B5FF44" rx="4"></rect>
-            <text x=" (80 + (28/28*260) + 4) " y="205" dominant-baseline="middle" font-weight="700">до 28%</text>
-          </g>
-        </svg>
-        <div class="legend">
-          <span><b style="background:#FFC631"></b>Мировые ставки по EUR</span>
-          <span><b style="background:#90FF55"></b>4Partners фикс 16%</span>
-          <span><b style="background:#B5FF44"></b>4Partners маржа до 28%</span>
+        <img
+          src="https://static.tildacdn.com/tild3965-6638-4463-b866-656164343762/4partners.svg"
+          alt="4Partners"
+          class="hero__logo"
+        >
+        <h1 class="hero__title">
+          Инвестиции в оборотный капитал Топ-1 кроссбордер-поставщика в&nbsp;России
+        </h1>
+        <p class="hero__lead">
+          Продаем зарубежные товары на крупнейших маркетплейсах
+        </p>
+        <div class="hero__logos">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Ozon_logo_clear.svg/2560px-Ozon_logo_clear.svg.png" alt="Ozon" />
+          <img src="https://www.letu.ru/common/img/logo/letu-logo.svg" alt="Л'Этуаль" />
+          <img src="https://www.sportmaster.ru/media/main-logo.svg" alt="Спортмастер" />
         </div>
-      </div>
-      <div class="accent"></div>
-      <p class="lead">Выше мировых ставок в <b>4–10 раз</b>. Выплаты — каждые 4 месяца.</p>
     </div>
   </section>
-
-  <!-- СЛАЙД 3: Наше предложение -->
-  <section>
-    <div class="container">
-      <h2>Наше предложение vs мировой рынок</h2>
-      <div class="row">
-        <div class="card">
-          <h3 style="margin:0 0 6px;font-family:Unbounded">16% фикс в EUR</h3>
-          <ul class="list">
-            <li>Выплата каждые 4 месяца</li>
-            <li>Капитал не замораживается на годы</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3 style="margin:0 0 6px;font-family:Unbounded">Доля в маржинальности</h3>
-          <ul class="list">
-            <li>Потенциал доходности: <b>8–28% годовых</b></li>
-            <li>Деление прибыли 50/50</li>
-          </ul>
-        </div>
-      </div>
-      <p class="lead">Краткосрочные вложения, высокая оборачиваемость.</p>
-    </div>
-  </section>
-
-  <!-- СЛАЙД 4: Цикл 4 месяца -->
-  <section>
-    <div class="container">
-      <h2>Цикл оборачиваемости инвестиций — 4 месяца</h2>
-      <div class="row">
-        <div class="card"><b>1) Заказ → закупка (~30 дн.)</b><br/>оформление и согласование, заказ поставщику</div>
-        <div class="card"><b>2) Склад (~30 дн.)</b><br/>закупка, обработка, хранение</div>
-        <div class="card"><b>3) Доставка (~30 дн.)</b><br/>международная логистика до клиента</div>
-        <div class="card"><b>4) Расчёты (~30 дн.)</b><br/>поступление средств, отчёт инвестору</div>
-      </div>
-      <p class="lead">Каждые 4 месяца — выплата дохода и выбор: забрать капитал или реинвестировать.</p>
-    </div>
-  </section>
-
-  <!-- СЛАЙД 5: Структура инвестиций -->
-  <section>
-    <div class="container">
-      <h2>Структура инвестиций</h2>
-      <div class="kpi"><span class="num">€500&nbsp;000</span><span class="note">привлекаемая сумма</span></div>
-      <div class="row">
-        <div class="card">
-          <b>Фиксированный доход</b><br/>16% годовых в EUR • Выплата каждые 4 месяца
-        </div>
-        <div class="card">
-          <b>Доля в маржинальности</b><br/>Средняя маржа 35–40% • Для инвестора 8–28% годовых
-        </div>
-      </div>
-      <div class="chips">
-        <span class="pill">Закупка товаров</span>
-        <span class="pill">Склад и логистика</span>
-        <span class="pill">Международная доставка</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- СЛАЙД 6: Почему выгодно -->
-  <section>
-    <div class="container">
-      <h2>Почему выгодно инвестировать у нас</h2>
-      <ul class="list">
-        <li><b>Высокая доходность:</b> 16% фикс или 17,5–20%+ при участии в марже</li>
-        <li><b>Короткий цикл:</b> выплаты каждые 4 месяца</li>
-        <li><b>Гибкость:</b> после каждого цикла — вывод капитала или реинвест</li>
-        <li><b>Прозрачность:</b> закупка → доставка → реализация → возврат средств</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- СЛАЙД 7: Доп. показатели -->
-  <section>
-    <div class="container">
-      <h2>Дополнительные показатели для инвестора</h2>
-      <div class="row">
-        <div class="card"><b>Историческая доходность:</b> 23,2% годовых</div>
-        <div class="card"><b>Оборот за год:</b> с 0 → €1,2 млн</div>
-        <div class="card"><b>Просрочки:</b> 0% за 2 года</div>
-        <div class="card"><b>Собственные вложения команды:</b> €150 000</div>
-        <div class="card"><b>Поставщики/страны:</b> ___ / ___ (диверсификация)</div>
-        <div class="card"><b>Оборачиваемость:</b> ____ дней</div>
-        <div class="card"><b>Выплаты от маркетплейсов:</b> 90% за 15 р.д.</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- СЛАЙД 8: Юридические гарантии -->
-  <section>
-    <div class="container">
-      <h2>Юридическая защита и гарантии</h2>
-      <ul class="list">
-        <li>Договор инвестирования: фиксированная доходность или доля в прибыли</li>
-        <li>Прозрачная отчётность после каждого цикла</li>
-        <li>Компании зарегистрированы в ЕС и ОАЭ</li>
-        <li>Гибкий выход: после любого 4-месячного цикла</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- СЛАЙД 9: CTA -->
-  <section id="apply">
-    <div class="container">
-      <h2>Готовы обсудить сделку?</h2>
-      <p class="lead">Оставьте контакты — пришлём условия и пример договора.</p>
-      <form class="card" onsubmit="event.preventDefault(); alert('Спасибо! Мы свяжемся с вами.');">
-        <label>Имя<br/>
-          <input required name="name" placeholder="Иван" />
-        </label>
-        <label>Email<br/>
-          <input required type="email" name="email" placeholder="name@example.com" />
-        </label>
-        <label>Сумма инвестиций (€)<br/>
-          <input name="sum" placeholder="50000" />
-        </label>
-        <div class="actions">
-          <button class="cta" type="submit">Отправить заявку</button>
-        </div>
-      </form>
-      <div class="chips">
-        <a class="tag" href="https://4partners.io" target="_blank" rel="noopener">https://4partners.io</a>
-        <a class="tag" href="mailto:invest@4partners.io">invest@4partners.io</a>
-        <a class="tag" href="tel:+971000000000">+971 00 000 0000</a>
-      </div>
-    </div>
-  </section>
-
   
+    <section id="slide-2" class="slide">
+      <div class="offer">
+    <div class="container">
+          <h2 class="offer__title">
+            Инвестиции в оборотный капитал 4Partners — до 28 % годовых в евро
+          </h2>
+          <p class="offer__subtitle">
+            Два формата участия: фикс 15 % или доля в прибыли (8–28 %). Выплаты каждые 4 месяца.
+          </p>
 
-  <script>
-    // Небольшая правка: подмена SVG выражений на реальные ширины (расчёт в JS для кросс-браузерности)
-    (function(){
-      const svg = document.querySelector('svg');
-      if(!svg) return;
-      const max = 28, base=80, span=260;
-      const setWidth = (q, v) => {
-        const el = svg.querySelector(q);
-        if(el) el.setAttribute('width', (v/max*span).toFixed(2));
-      };
-      const setTextX = (q, v) => {
-        const el = svg.querySelector(q);
-        if(el) el.setAttribute('x', (base + (v/max*span) + 4).toFixed(2));
-      };
-      const pairs = [
-        ['rect[y="30"]',1.9,'text[y="40"]'],
-        ['rect[y="50"]',4.0,'text[y="60"]'],
-        ['rect[y="70"]',4.05,'text[y="80"]'],
-        ['rect[y="90"]',0.1,'text[y="100"]'],
-        ['rect[y="110"]',0.0,'text[y="120"]'],
-        ['rect[y="130"]',0.1,'text[y="140"]'],
-        ['rect[y="150"]',0.0,'text[y="160"]'],
-        ['rect[y="175"]',16,'text[y="185"]'],
-        ['rect[y="195"]',28,'text[y="205"]'],
-      ];
-      pairs.forEach(([rq,v,tq])=>{ setWidth(rq,v); setTextX(tq,v); });
-    })();
-  </script>
+          <div class="offer__cards">
+            <article class="offer-card offer-card--fixed">
+              <h3>Фиксированный доход</h3>
+              <ul>
+                <li>15 % годовых в евро</li>
+                <li>Выплаты каждые 4 месяца</li>
+              </ul>
+            </article>
+
+            <article class="offer-card offer-card--share">
+              <h3>Доля в прибыли</h3>
+              <ul>
+                <li>До 28 % годовых в евро</li>
+                <li>Фактический диапазон 8–28 %</li>
+                <li>Доходность зависит от результатов торговых циклов</li>
+          </ul>
+            </article>
+        </div>
+
+          <div class="offer__terms">
+            <ul>
+              <li>Валюта инвестиций — EUR</li>
+              <li>Минимальная сумма: 500 000 €</li>
+              <li>Срок размещения: от 4 месяцев (1 цикл)</li>
+              <li>Возможность реинвестирования после каждого цикла</li>
+          </ul>
+        </div>
+
+          <aside class="offer__note" role="note">
+            Доходность в 4–10 раз выше ставок по депозитам в евро. Прозрачная модель и реальный товарный оборот.
+          </aside>
+      </div>
+    </div>
+  </section>
+    <section id="slide-3" class="slide">
+      <div class="business">
+    <div class="container">
+          <h2 class="business__title">Мы зарабатываем на реальном обороте брендовых товаров</h2>
+
+          <h3 class="business__subtitle">Как работает модель</h3>
+          <ul class="business__list">
+            <li>Закупаем товары напрямую у поставщиков в Европе и Азии по оптовым ценам.</li>
+            <li>Доставляем и храним на собственных складах.</li>
+            <li>Реализуем через маркетплейсы в России.</li>
+            <li>Средний цикл «cash-to-cash» — <strong>58 дней</strong>.</li>
+          </ul>
+
+          <h3 class="business__subtitle">Результаты</h3>
+          <ul class="business__list">
+            <li><strong>Годовой оборот:</strong> ≈ 1 млрд ₽</li>
+            <li>Потенциал продаж значительно выше — ограничение только в оборотных средствах.</li>
+      </ul>
+      </div>
+    </div>
+  </section>
+    <section id="slide-4" class="slide">
+      <div class="model">
+    <div class="container">
+          <h2 class="model__title">Как работает модель</h2>
+          <p class="model__intro">
+            Минимальный цикл оборачиваемости инвестиций — 4 месяца.
+          </p>
+
+          <h3 class="model__subtitle">Этапы цикла</h3>
+          <ol class="model__steps">
+            <li>
+              <strong>Получение заказов и закупка товаров — до 30 дней</strong><br>
+              Анализ спроса, формирование заказа поставщику, оплата и подготовка отгрузки.
+            </li>
+            <li>
+              <strong>Логистика и складская обработка — до 30 дней</strong><br>
+              Международная доставка до склада, приёмка и подготовка к продаже.
+            </li>
+            <li>
+              <strong>Продажа через маркетплейсы — до 30 дней</strong><br>
+              Размещение и реализация товаров.
+            </li>
+            <li>
+              <strong>Получение расчётов — до 30 дней</strong><br>
+              Маркетплейсы перечисляют оплату на расчётный счёт.
+            </li>
+          </ol>
+
+          <p class="model__summary">
+            🕓 Полный цикл — около 120 дней (4 месяца)
+          </p>
+
+          <h3 class="model__subtitle">Доходность</h3>
+          <ul class="model__list">
+            <li><strong>Фиксированный формат:</strong> 15 % годовых в евро</li>
+            <li><strong>Доля в марже:</strong> от 8 до 28 % годовых в евро</li>
+            <li>Фактическая доходность зависит от динамики продаж и оборачиваемости</li>
+      </ul>
+
+          <blockquote class="model__note">
+            Один цикл = четыре месяца.<br>
+            После каждого цикла инвестор получает выплату и может решить — реинвестировать или забрать капитал.
+          </blockquote>
+      </div>
+    </div>
+  </section>
+    <section id="slide-5" class="slide">
+      <div class="structure">
+    <div class="container">
+          <h2 class="structure__title">Структура инвестиций</h2>
+          <p class="structure__sum">Привлекаемая сумма — <strong>500 000 €</strong></p>
+
+          <h3 class="structure__subtitle">Форматы участия</h3>
+
+          <div class="structure__formats">
+            <div class="structure__block">
+              <h4>Фиксированный доход</h4>
+              <ul>
+                <li>15 % годовых в евро</li>
+                <li>Выплаты каждые 4 месяца</li>
+              </ul>
+            </div>
+
+            <div class="structure__block">
+              <h4>Доля в маржинальности</h4>
+              <ul>
+                <li>До 28 % годовых в евро (фактический диапазон 8–28 %)</li>
+                <li>Доходность зависит от результатов торговых циклов</li>
+      </ul>
+    </div>
+          </div>
+
+          <h3 class="structure__subtitle">Использование инвестиций</h3>
+          <ol class="structure__usage">
+            <li><strong>Закупка товаров</strong> — основная часть капитала направляется на пополнение товарных запасов.</li>
+            <li><strong>Складская обработка и логистика</strong> — оплата хранения, упаковки и внутренней транспортировки.</li>
+            <li><strong>Международная доставка</strong> — доставка товаров из стран-поставщиков в Россию.</li>
+          </ol>
+      </div>
+    </div>
+  </section>
+    <section id="slide-6" class="slide">
+      <div class="advantages">
+    <div class="container">
+          <h2 class="advantages__title">Почему выгодно инвестировать в нас</h2>
+
+          <div class="advantages__group">
+            <h3>Высокая доходность</h3>
+            <ul>
+              <li>15 % фиксированных годовых в евро или 8–28 % при участии в маржинальности.</li>
+              <li>В 4–10 раз выше, чем доходность банковских вкладов в валюте.</li>
+            </ul>
+          </div>
+
+          <div class="advantages__group">
+            <h3>Короткий цикл</h3>
+            <ul>
+              <li>Минимальный срок вложений — 4 месяца.</li>
+              <li>После каждого цикла инвестор получает выплату и может забрать капитал или реинвестировать.</li>
+            </ul>
+          </div>
+
+          <div class="advantages__group">
+            <h3>Прозрачность и контроль</h3>
+            <ul>
+              <li>Средства работают только в товарном обороте.</li>
+              <li>Подробная отчётность после каждого цикла.</li>
+              <li>Без скрытых расходов и комиссий.</li>
+      </ul>
+    </div>
+
+          <div class="advantages__group">
+            <h3>Доверие и опыт</h3>
+            <ul>
+              <li>Топ-1 кроссбордер-поставщик в России.</li>
+              <li>Работаем с крупнейшими маркетплейсами: Ozon, Л'Этуаль, Спортмастер и др.</li>
+              <li>Более двух лет стабильных выплат инвесторам без просрочек.</li>
+            </ul>
+          </div>
+      </div>
+    </div>
+  </section>
+    <section id="slide-7" class="slide">
+      <div class="metrics">
+        <div class="container">
+          <h2 class="metrics__title">Дополнительные показатели для инвестора</h2>
+
+          <div class="metrics__grid">
+            <article class="metrics__card">
+              <h3>Финансовые показатели</h3>
+              <ul>
+                <li><strong>Историческая доходность инвесторов:</strong> 23,2 % годовых</li>
+                <li><strong>Годовой оборот компании:</strong> 1 млрд ₽</li>
+                <li><strong>Средний срок оборачиваемости капитала:</strong> 4 месяца</li>
+                <li><strong>90 % средств возвращаются</strong> в течение 58 дней</li>
+              </ul>
+            </article>
+
+            <article class="metrics__card">
+              <h3>Надёжность и прозрачность</h3>
+              <ul>
+                <li><strong>Просрочки выплат:</strong> 0 % за 2 года</li>
+                <li><strong>Собственные вложения команды:</strong> 2 млн €</li>
+                <li><strong>Без кредитной нагрузки</strong> — проект не использует банковские займы</li>
+                <li><strong>Отчётность</strong> после каждого инвестиционного цикла</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="slide-8" class="slide">
+      <div class="legal">
+        <div class="container">
+          <h2 class="legal__title">Юридическая защита инвестора</h2>
+
+          <div class="legal__block">
+            <h3>Надёжные правовые гарантии</h3>
+            <ul class="legal__list">
+              <li>Все инвестиции оформляются официальным договором займа или договором участия в прибыли.</li>
+              <li>Каждая операция фиксируется и подтверждается документально.</li>
+              <li>После каждого инвестиционного цикла инвестор получает отчёт о движении средств и доходности.</li>
+            </ul>
+          </div>
+
+          <div class="legal__block">
+            <h3>Гибкие способы участия</h3>
+            <ul class="legal__list">
+              <li>Возможна оплата и возврат средств через банковский перевод в Европе, криптовалюту или наличный расчёт (по согласованию).</li>
+              <li>Формат участия подбирается индивидуально для каждого инвестора.</li>
+            </ul>
+          </div>
+
+          <div class="legal__block">
+            <h3>Юридическая база</h3>
+            <ul class="legal__list">
+              <li>Компании зарегистрированы и действуют в ЕС и ОАЭ.</li>
+              <li>Прозрачная отчётность, соответствие международным стандартам.</li>
+              <li>Средства инвестора защищены договорными обязательствами и отражаются в официальном учёте.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="slide-9" class="slide">
+      <div class="contacts">
+        <div class="container">
+          <h2 class="contacts__title">Контакты</h2>
+
+          <div class="contacts__info">
+            <p class="contacts__company"><strong>4Partners</strong><br>Топ-1 кроссбордер-поставщик товаров в Россию</p>
+
+            <p><strong>Офисы:</strong><br>Европейский Союз<br>Объединённые Арабские Эмираты</p>
+
+            <p><strong>Связь:</strong><br>
+              Telegram / WhatsApp: <a href="tel:+971500000000">+971 50 000 0000</a><br>
+              Email: <a href="mailto:invest@4partners.global">invest@4partners.global</a><br>
+              Сайт: <a href="https://www.4partners.global" target="_blank">www.4partners.global</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 </body>
 </html>
