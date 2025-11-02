@@ -25,6 +25,73 @@
       text-align: left; /* ВАЖНО — все тексты по левому краю */
     }
 
+    /* ===== ГЛОБАЛЬНОЕ ВЫРАВНИВАНИЕ ПО ЛЕВОМУ КРАЮ ===== */
+    * {
+      text-align: left !important;
+    }
+
+    /* ===== БУЛЛЕТ-ПОИНТЫ ДЛЯ ВСЕХ СПИСКОВ ===== */
+    ul {
+      list-style-type: disc;
+      padding-left: 20px;
+    }
+
+    /* ===== ЕДИНАЯ АДАПТИВНАЯ ТИПОГРАФИКА ===== */
+    
+    /* Основные заголовки (h1) */
+    h1, .h1 {
+      font-family: "Unbounded", sans-serif;
+      font-weight: 700;
+      font-size: 32px;
+      line-height: 1.2;
+      margin: 0 0 12px;
+    }
+
+    /* Заголовки секций (h2) */
+    h2, .h2 {
+      font-family: "Unbounded", sans-serif;
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 1.3;
+      margin: 0 0 16px;
+    }
+
+    /* Подзаголовки (h3) */
+    h3, .h3 {
+      font-family: "Unbounded", sans-serif;
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 1.4;
+      margin: 0 0 8px;
+    }
+
+    /* Заголовки блоков (h4) */
+    h4, .h4 {
+      font-family: "Unbounded", sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 1.4;
+      margin: 0 0 6px;
+    }
+
+    /* Обычный текст */
+    p, .text {
+      font-family: "Geologica", sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      margin: 0 0 12px;
+    }
+
+    /* Мелкий текст */
+    .text-small {
+      font-family: "Geologica", sans-serif;
+      font-size: 14px;
+      line-height: 1.4;
+      margin: 0 0 8px;
+    }
+
+    /* Все размеры шрифтов теперь одинаковые для всех разрешений */
+
     .slide {
       display: flex;
       align-items: center;
@@ -50,31 +117,33 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: center;
-      text-align: center;
-      min-height: 100vh;
+      align-items: flex-start;
+      min-height: 80vh;
       background-color: var(--bg);
       color: var(--ink);
-      padding: 48px 16px;
+      padding: 40px 12px;
     }
 
     .hero__logo {
-      height: 60px;
-      margin-bottom: 24px;
+      height: 40px;
+      margin-bottom: 16px;
     }
 
     .hero__title {
-      font-family: "Unbounded", sans-serif;
-      font-weight: 700;
-      font-size: 24px;
-      line-height: 1.3;
-      max-width: 680px;
-      margin: 0 auto 16px;
+      /* Использует базовые стили h1 */
+      max-width: 100%;
+      margin: 0 0 12px;
+    }
+
+    /* Десктоп: ограничиваем ширину h1 в Hero */
+    @media (min-width: 768px) {
+      .hero__title {
+        max-width: 680px;
+      }
     }
 
     .hero__lead {
-      font-family: "Geologica", sans-serif;
-      font-size: 16px;
+      /* Использует базовые стили p */
       color: var(--ink);
       margin-bottom: 0;
     }
@@ -83,36 +152,73 @@
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      gap: 16px;
-      margin-top: 8px;
-      height: 32px;
+      gap: 12px;
+      margin-top: 12px;
+      height: 28px;
+      flex-wrap: wrap;
     }
 
     .hero__logos img {
-      height: 24px;
+      height: 20px;
+      max-width: 80px;
+      object-fit: contain;
     }
 
+    /* Планшеты */
+    @media (min-width: 480px) {
+      .hero {
+        padding: 40px 16px;
+      }
+      
+      .hero__logo {
+        height: 50px;
+        margin-bottom: 20px;
+      }
+      
+      .hero__logos {
+        gap: 16px;
+        height: 30px;
+      }
+      
+      .hero__logos img {
+        height: 22px;
+      }
+    }
+
+    /* Десктоп */
     @media (min-width: 768px) {
-      .hero__title {
-        font-size: 32px;
+      .hero {
+        padding: 40px 16px;
+      }
+      
+      .hero__logo {
+        height: 60px;
+        margin-bottom: 24px;
+      }
+      
+      .hero__logos {
+        justify-content: flex-start;
+        gap: 16px;
+        margin-top: 8px;
+        height: 32px;
+      }
+      
+      .hero__logos img {
+        height: 24px;
+        max-width: none;
       }
     }
 
     .offer {
-      text-align: center;
       padding: 64px 16px;
     }
 
     .offer__title {
-      font-family: "Unbounded", sans-serif;
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 16px;
+      /* Использует базовые стили h2 */
     }
 
     .offer__subtitle {
-      font-family: "Geologica", sans-serif;
-      font-size: 16px;
+      /* Использует базовые стили p */
       color: var(--ink);
       margin-bottom: 32px;
     }
@@ -134,30 +240,26 @@
     }
 
     .offer-card h3 {
-      font-family: "Unbounded", sans-serif;
-      font-size: 18px;
+      /* Использует базовые стили h3 */
       margin-bottom: 12px;
     }
 
     .offer-card ul {
-      list-style: none;
-      padding: 0;
+      list-style-type: disc;
+      padding-left: 20px;
       margin: 0;
     }
 
     .offer-card li {
-      font-family: "Geologica", sans-serif;
-      font-size: 15px;
+      /* Использует базовые стили p */
       margin-bottom: 8px;
     }
 
     .offer__terms ul {
-      list-style: none;
-      padding: 0;
-      margin: 0 auto 32px;
-      max-width: 400px;
-      font-size: 15px;
-      line-height: 1.5;
+      list-style-type: disc;
+      padding-left: 20px;
+      margin: 0 0 32px;
+      max-width: 100%;
     }
 
     .offer__note {
@@ -167,8 +269,8 @@
       font-family: "Geologica", sans-serif;
       font-weight: 500;
       color: var(--ink);
-      max-width: 480px;
-      margin: 0 auto;
+      max-width: 100%;
+      margin: 0 0 32px;
     }
 
     @media (min-width: 768px) {
@@ -187,30 +289,24 @@
     }
 
     .trade-flow__title {
-      font-family: "Unbounded", sans-serif;
-      font-size: 24px;
-      font-weight: 700;
+      /* Использует базовые стили h2 */
       margin-bottom: 16px;
       color: var(--ink);
     }
 
     .trade-flow__text {
-      font-family: "Geologica", sans-serif;
-      font-size: 16px;
+      /* Использует базовые стили p */
       color: var(--ink);
       margin-bottom: 24px;
     }
 
     .trade-flow__subtitle {
-      font-family: "Unbounded", sans-serif;
-      font-size: 18px;
+      /* Использует базовые стили h3 */
       margin: 24px 0 12px;
     }
 
     .trade-flow__list {
-      font-family: "Geologica", sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
+      /* Использует базовые стили p */
       margin: 0 0 16px;
       padding-left: 20px;
     }
@@ -230,7 +326,6 @@
       border-radius: 16px;
       padding: 16px;
       width: 160px;
-      text-align: center;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     }
 
@@ -240,13 +335,13 @@
     }
 
     .trade-flow__label {
-      font-family: "Geologica", sans-serif;
+      /* Использует базовые стили p */
       font-weight: 600;
       margin-bottom: 4px;
     }
 
     .trade-flow__price {
-      font-size: 15px;
+      /* Использует базовые стили p */
       color: #555;
       margin: 0;
     }
@@ -270,8 +365,7 @@
     }
 
     .trade-flow__caption {
-      font-family: "Geologica", sans-serif;
-      font-size: 15px;
+      /* Использует базовые стили p */
       color: #444;
       max-width: 480px;
     }
@@ -284,28 +378,23 @@
     }
 
     .business {
-      padding: 64px 16px;
+      padding: 40px 16px;
     }
 
     .business__title {
-      font-family: "Unbounded", sans-serif;
-      font-size: 24px;
-      font-weight: 700;
+      /* Использует базовые стили h2 */
       margin-bottom: 24px;
       color: var(--ink);
     }
 
     .business__subtitle {
-      font-family: "Unbounded", sans-serif;
-      font-size: 18px;
+      /* Использует базовые стили h3 */
       margin: 32px 0 12px;
       color: var(--ink);
     }
 
     .business__list {
-      font-family: "Geologica", sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
+      /* Использует базовые стили p */
       margin: 0 0 16px;
       padding-left: 20px;
     }
@@ -315,23 +404,19 @@
     }
 
     .model__title {
-      font-family: "Unbounded", sans-serif;
-      font-size: 24px;
-      font-weight: 700;
+      /* Использует базовые стили h2 */
       margin-bottom: 16px;
       color: var(--ink);
     }
 
     .model__intro {
-      font-family: "Geologica", sans-serif;
-      font-size: 16px;
+      /* Использует базовые стили p */
       color: var(--ink);
       margin-bottom: 24px;
     }
 
     .model__subtitle {
-      font-family: "Unbounded", sans-serif;
-      font-size: 18px;
+      /* Использует базовые стили h3 */
       margin: 24px 0 12px;
       color: var(--ink);
     }
@@ -344,9 +429,7 @@
     }
 
     .model__steps li {
-      font-family: "Geologica", sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
+      /* Использует базовые стили p */
       margin-bottom: 16px;
       position: relative;
       padding-left: 32px;
@@ -363,16 +446,13 @@
     }
 
     .model__summary {
-      font-family: "Geologica", sans-serif;
-      font-size: 15px;
+      /* Использует базовые стили p */
       font-weight: 500;
       margin: 16px 0 32px;
     }
 
     .model__list {
-      font-family: "Geologica", sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
+      /* Использует базовые стили p */
       margin: 0 0 16px;
       padding-left: 20px;
     }
@@ -385,7 +465,54 @@
       font-weight: 500;
       color: var(--ink);
       margin-top: 32px;
-      max-width: 520px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Адаптивные стили для цитат */
+    blockquote {
+      background: linear-gradient(135deg, var(--amber), var(--yellow));
+      border-radius: 16px;
+      padding: 16px;
+      font-family: "Geologica", sans-serif;
+      font-weight: 500;
+      color: var(--ink);
+      margin: 24px 0;
+      width: 100%;
+      box-sizing: border-box;
+      border-left: 4px solid var(--ink);
+    }
+
+    /* Мобильные устройства */
+    @media (max-width: 767px) {
+      blockquote {
+        margin: 16px 8px;
+        padding: 12px 16px;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+    }
+
+    /* Планшеты */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      blockquote {
+        margin: 24px 0;
+        padding: 16px 20px;
+        max-width: 100%;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+    }
+
+    /* Десктоп */
+    @media (min-width: 1024px) {
+      blockquote {
+        margin: 32px 0;
+        padding: 20px 24px;
+        max-width: 100%;
+        font-size: 16px;
+        line-height: 1.6;
+      }
     }
 
     .structure {
@@ -393,23 +520,19 @@
     }
 
     .structure__title {
-      font-family: "Unbounded", sans-serif;
-      font-size: 24px;
-      font-weight: 700;
+      /* Использует базовые стили h2 */
       margin-bottom: 8px;
       color: var(--ink);
     }
 
     .structure__sum {
-      font-family: "Geologica", sans-serif;
-      font-size: 16px;
+      /* Использует базовые стили p */
       color: var(--ink);
       margin-bottom: 24px;
     }
 
     .structure__subtitle {
-      font-family: "Unbounded", sans-serif;
-      font-size: 18px;
+      /* Использует базовые стили h3 */
       margin: 32px 0 16px;
       color: var(--ink);
     }
@@ -430,16 +553,14 @@
     }
 
     .structure__block h4 {
-      font-family: "Unbounded", sans-serif;
-      font-size: 16px;
+      /* Использует базовые стили h4 */
       margin-bottom: 8px;
       color: var(--ink);
     }
 
     .structure__block ul {
-      font-family: "Geologica", sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
+      /* Использует базовые стили p */
+      list-style-type: disc;
       padding-left: 20px;
       margin: 0;
     }
@@ -452,9 +573,7 @@
     }
 
     .structure__usage li {
-      font-family: "Geologica", sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
+      /* Использует базовые стили p */
       margin-bottom: 16px;
       position: relative;
       padding-left: 32px;
@@ -475,9 +594,7 @@
     }
 
     .advantages__title {
-      font-family: "Unbounded", sans-serif;
-      font-size: 24px;
-      font-weight: 700;
+      /* Использует базовые стили h2 */
       margin-bottom: 32px;
       color: var(--ink);
     }
@@ -487,16 +604,14 @@
     }
 
     .advantages__group h3 {
-      font-family: "Unbounded", sans-serif;
-      font-size: 18px;
+      /* Использует базовые стили h3 */
       margin-bottom: 8px;
       color: var(--ink);
     }
 
     .advantages__group ul {
-      font-family: "Geologica", sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
+      /* Использует базовые стили p */
+      list-style-type: disc;
       color: var(--ink);
       margin: 0;
       padding-left: 20px;
@@ -507,9 +622,7 @@
     }
 
     .metrics__title {
-      font-family: "Unbounded", sans-serif;
-      font-size: 24px;
-      font-weight: 700;
+      /* Использует базовые стили h2 */
       color: var(--ink);
       margin-bottom: 24px;
     }
@@ -529,20 +642,16 @@
     }
 
     .metrics__card h3 {
-      font-family: "Unbounded", sans-serif;
-      font-size: 18px;
-      font-weight: 700;
+      /* Использует базовые стили h3 */
       color: var(--ink);
       margin: 0 0 10px;
     }
 
     .metrics__card ul {
-      list-style: none;
+      list-style-type: disc;
       margin: 0;
-      padding: 0;
-      font-family: "Geologica", sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
+      padding-left: 20px;
+      /* Использует базовые стили p */
       color: var(--ink);
     }
 
@@ -562,9 +671,7 @@
     }
 
     .legal__title {
-      font-family: "Unbounded", sans-serif;
-      font-size: 24px;
-      font-weight: 700;
+      /* Использует базовые стили h2 */
       color: #222;
       margin-bottom: 32px;
     }
@@ -574,9 +681,7 @@
     }
 
     .legal__block h3 {
-      font-family: "Unbounded", sans-serif;
-      font-size: 18px;
-      font-weight: 700;
+      /* Использует базовые стили h3 */
       color: #222;
       margin-bottom: 12px;
     }
@@ -584,8 +689,7 @@
     .legal__list {
       list-style-type: disc;
       padding-left: 20px;
-      font-family: "Geologica", sans-serif;
-      font-size: 15px;
+      /* Использует базовые стили p */
       line-height: 1.8;
       color: #222;
     }
@@ -599,39 +703,74 @@
     }
 
     .contacts {
-      padding: 64px 16px;
+      padding: 40px 16px;
       background-color: #f7f7f7;
     }
 
     .contacts__title {
-      font-family: "Unbounded", sans-serif;
-      font-size: 24px;
-      font-weight: 700;
+      /* Использует базовые стили h2 */
       color: #222;
       margin-bottom: 32px;
     }
 
-    .contacts__info {
-      font-family: "Geologica", sans-serif;
-      font-size: 15px;
-      line-height: 1.8;
+    .contacts__content {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .contacts__company h3,
+    .contacts__offices h3,
+    .contacts__communication h3 {
+      /* Использует базовые стили h3 */
       color: #222;
+      margin-bottom: 12px;
     }
 
-    .contacts__info p {
-      margin-bottom: 16px;
+    .contacts__company p {
+      /* Использует базовые стили p */
+      color: #666;
+      margin: 0;
     }
 
-    .contacts__info a {
+    .contacts__offices ul,
+    .contacts__communication ul {
+      /* Использует базовые стили ul */
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .contacts__offices li,
+    .contacts__communication li {
+      /* Использует базовые стили p */
+      color: #222;
+      margin-bottom: 8px;
+    }
+
+    .contacts__communication a {
       color: #222;
       text-decoration: none;
       border-bottom: 1px solid #222;
       transition: 0.2s ease;
     }
 
-    .contacts__info a:hover {
+    .contacts__communication a:hover {
       color: #000;
       border-bottom-color: #000;
+    }
+
+    /* Адаптивность для контактов */
+    @media (min-width: 768px) {
+      .contacts__content {
+        flex-direction: row;
+        gap: 48px;
+      }
+      
+      .contacts__company,
+      .contacts__offices,
+      .contacts__communication {
+        flex: 1;
+      }
     }
 
   </style>
@@ -646,7 +785,7 @@
           class="hero__logo"
         >
         <h1 class="hero__title">
-          Инвестиции в оборотный капитал Топ-1 кроссбордер-поставщика в&nbsp;России
+          Инвестиции в оборотные средства Топ-1 кроссбордер-поставщика в&nbsp;России
         </h1>
         <p class="hero__lead">
           Продаем зарубежные товары на крупнейших маркетплейсах
@@ -654,26 +793,26 @@
         <div class="hero__logos">
           <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Ozon_logo_clear.svg/2560px-Ozon_logo_clear.svg.png" alt="Ozon" />
           <img src="https://www.letu.ru/common/img/logo/letu-logo.svg" alt="Л'Этуаль" />
-          <img src="https://www.sportmaster.ru/media/main-logo.svg" alt="Спортмастер" />
-        </div>
+          <img src="https://static.tildacdn.com/tild3061-3533-4334-b630-313637323864/main-logo_1.svg" alt="Спортмастер" />
+      </div>
     </div>
   </section>
-  
+
     <section id="slide-2" class="slide">
       <div class="offer">
     <div class="container">
           <h2 class="offer__title">
-            Инвестиции в оборотный капитал 4Partners — до 28 % годовых в евро
+            Инвестиции в оборотные средства 4Partners — до 28% годовых в евро
           </h2>
           <p class="offer__subtitle">
-            Два формата участия: фикс 15 % или доля в прибыли (8–28 %). Выплаты каждые 4 месяца.
+            Два формата участия: фикс 15% или доля в прибыли (8–28%). Выплаты каждые 4 месяца.
           </p>
 
           <div class="offer__cards">
             <article class="offer-card offer-card--fixed">
               <h3>Фиксированный доход</h3>
               <ul>
-                <li>15 % годовых в евро</li>
+                <li>15% годовых в евро</li>
                 <li>Выплаты каждые 4 месяца</li>
               </ul>
             </article>
@@ -691,14 +830,16 @@
           <div class="offer__terms">
             <ul>
               <li>Валюта инвестиций — EUR</li>
-              <li>Минимальная сумма: 500 000 €</li>
+              <li>Минимальная сумма: 100 000 €</li>
+              <li>Инвестировать можно в любой валюте, наличными или криптовалютой — в эквиваленте 100 000 €</li>
+              <li>Доходность выплачивается в евро, что защищает инвестора от инфляции рубля</li>
               <li>Срок размещения: от 4 месяцев (1 цикл)</li>
               <li>Возможность реинвестирования после каждого цикла</li>
           </ul>
         </div>
 
           <aside class="offer__note" role="note">
-            Доходность в 4–10 раз выше ставок по депозитам в евро. Прозрачная модель и реальный товарный оборот.
+            Доходность в 4–10 раз выше ставок по депозитам в евро.
           </aside>
       </div>
     </div>
@@ -707,6 +848,10 @@
       <div class="business">
     <div class="container">
           <h2 class="business__title">Мы зарабатываем на реальном обороте брендовых товаров</h2>
+
+          <p>4Partners — единственный аккредитованный сервисный партнёр маркетплейсов по кроссбордер-поставкам в Россию.</p>
+          <p>Мы не просто селлер на маркетплейсах: 4Partners сопровождает полный цикл поставки — от закупки у зарубежных производителей и брендов до продажи товаров и расчётов с площадками.</p>
+          <p>Наша деятельность полностью соответствует требованиям международной торговли и таможенного законодательства.</p>
 
           <h3 class="business__subtitle">Как работает модель</h3>
           <ul class="business__list">
@@ -720,7 +865,7 @@
           <ul class="business__list">
             <li><strong>Годовой оборот:</strong> ≈ 1 млрд ₽</li>
             <li>Потенциал продаж значительно выше — ограничение только в оборотных средствах.</li>
-      </ul>
+          </ul>
       </div>
     </div>
   </section>
@@ -774,7 +919,7 @@
       <div class="structure">
     <div class="container">
           <h2 class="structure__title">Структура инвестиций</h2>
-          <p class="structure__sum">Привлекаемая сумма — <strong>500 000 €</strong></p>
+          <p class="structure__sum">Привлекаемая сумма — <strong>100 000 €.</strong> Вкладывайте в любой валюте, получайте прибыль в Евро.</p>
 
           <h3 class="structure__subtitle">Форматы участия</h3>
 
@@ -785,7 +930,7 @@
                 <li>15 % годовых в евро</li>
                 <li>Выплаты каждые 4 месяца</li>
               </ul>
-            </div>
+        </div>
 
             <div class="structure__block">
               <h4>Доля в маржинальности</h4>
@@ -793,8 +938,8 @@
                 <li>До 28 % годовых в евро (фактический диапазон 8–28 %)</li>
                 <li>Доходность зависит от результатов торговых циклов</li>
       </ul>
-    </div>
-          </div>
+        </div>
+      </div>
 
           <h3 class="structure__subtitle">Использование инвестиций</h3>
           <ol class="structure__usage">
@@ -815,6 +960,7 @@
             <ul>
               <li>15 % фиксированных годовых в евро или 8–28 % при участии в маржинальности.</li>
               <li>В 4–10 раз выше, чем доходность банковских вкладов в валюте.</li>
+              <li>Доходность рассчитывается в Евро, что защищает инвестора от инфляции рубля.</li>
             </ul>
           </div>
 
@@ -848,7 +994,7 @@
   </section>
     <section id="slide-7" class="slide">
       <div class="metrics">
-        <div class="container">
+    <div class="container">
           <h2 class="metrics__title">Дополнительные показатели для инвестора</h2>
 
           <div class="metrics__grid">
@@ -869,15 +1015,15 @@
                 <li><strong>Собственные вложения команды:</strong> 2 млн €</li>
                 <li><strong>Без кредитной нагрузки</strong> — проект не использует банковские займы</li>
                 <li><strong>Отчётность</strong> после каждого инвестиционного цикла</li>
-              </ul>
+      </ul>
             </article>
           </div>
         </div>
-      </div>
-    </section>
+    </div>
+  </section>
     <section id="slide-8" class="slide">
       <div class="legal">
-        <div class="container">
+    <div class="container">
           <h2 class="legal__title">Юридическая защита инвестора</h2>
 
           <div class="legal__block">
@@ -912,17 +1058,29 @@
       <div class="contacts">
         <div class="container">
           <h2 class="contacts__title">Контакты</h2>
-
-          <div class="contacts__info">
-            <p class="contacts__company"><strong>4Partners</strong><br>Топ-1 кроссбордер-поставщик товаров в Россию</p>
-
-            <p><strong>Офисы:</strong><br>Европейский Союз<br>Объединённые Арабские Эмираты</p>
-
-            <p><strong>Связь:</strong><br>
-              Telegram / WhatsApp: <a href="tel:+971500000000">+971 50 000 0000</a><br>
-              Email: <a href="mailto:invest@4partners.global">invest@4partners.global</a><br>
-              Сайт: <a href="https://www.4partners.global" target="_blank">www.4partners.global</a>
-            </p>
+          
+          <div class="contacts__content">
+            <div class="contacts__company">
+              <h3>4Partners</h3>
+              <p>Топ-1 кроссбордер-поставщик товаров в Россию</p>
+            </div>
+            
+            <div class="contacts__offices">
+              <h3>Офисы</h3>
+              <ul>
+                <li>Европейский Союз</li>
+                <li>Объединённые Арабские Эмираты</li>
+              </ul>
+            </div>
+            
+            <div class="contacts__communication">
+              <h3>Связь</h3>
+              <ul>
+                <li><strong>Telegram / WhatsApp:</strong> <a href="tel:+971500000000">+971 50 000 0000</a></li>
+                <li><strong>Email:</strong> <a href="mailto:invest@4partners.global">invest@4partners.global</a></li>
+                <li><strong>Сайт:</strong> <a href="https://www.4partners.global" target="_blank">www.4partners.global</a></li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
